@@ -12,7 +12,11 @@ namespace RestApiTestSolution.Model
 
         public string BaseUrl { get; set; }
 
-        public string Authorization { get; set; }
+        public string ContentType { get; set; }
+
+        public string AuthorizationScheme { get; set; }
+
+        public string AuthorizationParameter { get; set; }
 
         public List<RestApiCallItem> Items { get; set; }
     }

@@ -7,6 +7,7 @@
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"         
         xmlns:viewModel="clr-namespace:RestApiTestSolution.ViewModel"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
@@ -27,10 +28,11 @@
                     <Button DockPanel.Dock="Right" Visibility="{Binding ProjectsIsNotVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleDownSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28" Click="Button_Click"/>
                     <Button DockPanel.Dock="Right" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleUpSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28" Click="Button_Click"/>
                 </DockPanel>
-                <Grid Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Background="White">
+                <!--Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}"-->
+                <Grid Background="White">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="10*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -61,9 +63,26 @@
                                     <TextBlock DockPanel.Dock="Top" Text="Project Name"/>
                                     <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.Project}" Margin="0 5"/>
                                     <TextBlock DockPanel.Dock="Top" Text="Content-Type"/>
-                                    <TextBox DockPanel.Dock="Top" Margin="0 5"/>
-                                    <TextBlock DockPanel.Dock="Top" Text="Authorization"/>
-                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.Authorization}" Margin="0 5 0 0"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallPrject.ContentType}" Margin="0 5"/>
+                                    <Grid DockPanel.Dock="Top">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="5"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Column="0">
+                                            <DockPanel>
+                                                <TextBlock DockPanel.Dock="Top" Text="Authorization-Scheme"/>
+                                                <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.AuthorizationScheme}" Margin="0 5 0 0"/>
+                                            </DockPanel>
+                                        </Grid>
+                                        <Grid Column="2">
+                                            <DockPanel>
+                                                <TextBlock DockPanel.Dock="Top" Text="Authorization-Parameter"/>
+                                                <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.AuthorizationParameter}" Margin="0 5 0 0"/>
+                                            </DockPanel>
+                                        </Grid>
+                                    </Grid>
                                 </DockPanel>
                             </Grid>
                             <Grid Column="1" Row="0">
@@ -129,11 +148,11 @@
                             <DockPanel DockPanel.Dock="Top" Margin="10" LastChildFill="True">
                                 <DockPanel DockPanel.Dock="Left">
                                     <TextBlock DockPanel.Dock="Top" Text="Http Method"/>
-                                    <ComboBox Margin="0 5" Width="70" Text="{Binding RESTCallItem.HttpVerb}"></ComboBox>
+                                    <ComboBox Margin="0 5" Width="70" ItemsSource="{Binding HttpVerbsEnumValues}" SelectedItem="{Binding RESTCallItem.HttpVerb}"></ComboBox>
                                 </DockPanel>
                                 <DockPanel DockPanel.Dock="Left" Margin="10 0">
                                     <TextBlock DockPanel.Dock="Top" Text="Base URL"/>
-                                    <TextBlock Margin="0 5" Text="{Binding RESTCallProject.BaseUrl}"/>
+                                    <TextBlock Margin="0 9" Text="{Binding RESTCallProject.BaseUrl}"/>
                                 </DockPanel>
                                 <DockPanel DockPanel.Dock="Left">
                                     <TextBlock DockPanel.Dock="Top" Text="Route"/>
@@ -151,9 +170,9 @@
                                 <DockPanel LastChildFill="True">
                                     <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="#FFC7F5FF">
                                         <TextBlock DockPanel.Dock="Left" Text="Send Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                                        <Button DockPanel.Dock="Right" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome PlaySolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                                        <Button Command="{Binding SendMessageCommand}" DockPanel.Dock="Right" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome PlaySolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                                     </DockPanel>
-                                    <TextBox/>
+                                    <TextBox Text="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"/>
                                 </DockPanel>
                             </Grid>
                             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
@@ -162,7 +181,7 @@
                                     <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="#FFC7F5FF">
                                         <TextBlock DockPanel.Dock="Left" Text="Receive Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
                                     </DockPanel>
-                                    <TextBox/>
+                                    <TextBox Text="{Binding ReceiveMessage}"/>
                                 </DockPanel>
                             </Grid>
                         </Grid>
