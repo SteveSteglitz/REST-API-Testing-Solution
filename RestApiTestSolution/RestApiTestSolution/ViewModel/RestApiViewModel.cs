@@ -15,6 +15,8 @@ namespace RestApiTestSolution.ViewModel
     {
         private IRestApiManager _manager;
         private bool _projectsIsVisible;
+        private RestApiCallItem _restCallItem;
+        private RestApiCall _restCallProject;
 
         public RestApiViewModel()
         {
@@ -43,9 +45,25 @@ namespace RestApiTestSolution.ViewModel
 
         public ObservableCollection<RestApiCallItem> RESTCallItems { get; set; }
 
-        public RestApiCall RESTCallProject { get; set; }
+        public RestApiCall RESTCallProject
+        {
+            get => _restCallProject;
+            set
+            {
+                _restCallProject = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public RestApiCallItem RESTCallItem { get; set; }
+        public RestApiCallItem RESTCallItem
+        {
+            get => _restCallItem;
+            set
+            {
+                _restCallItem = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool ProjectsIsVisible
         {

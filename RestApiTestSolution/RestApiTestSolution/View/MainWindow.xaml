@@ -59,17 +59,17 @@
                             <Grid Column="0" Row="0">
                                 <DockPanel LastChildFill="False" Margin="10">
                                     <TextBlock DockPanel.Dock="Top" Text="Project Name"/>
-                                    <TextBox DockPanel.Dock="Top" Margin="0 5"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.Project}" Margin="0 5"/>
                                     <TextBlock DockPanel.Dock="Top" Text="Content-Type"/>
                                     <TextBox DockPanel.Dock="Top" Margin="0 5"/>
                                     <TextBlock DockPanel.Dock="Top" Text="Authorization"/>
-                                    <TextBox DockPanel.Dock="Top" Margin="0 5 0 0"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.Authorization}" Margin="0 5 0 0"/>
                                 </DockPanel>
                             </Grid>
                             <Grid Column="1" Row="0">
                                 <DockPanel LastChildFill="True" Margin="10">
                                     <TextBlock DockPanel.Dock="Top" Text="Base URL"/>
-                                    <TextBox DockPanel.Dock="Top" Margin="0 5"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.BaseUrl}" Margin="0 5"/>
                                     <TextBlock DockPanel.Dock="Top" Text="Description"/>
                                     <TextBox DockPanel.Dock="Top" Margin="0 5 0 0" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"/>
                                 </DockPanel>
@@ -129,7 +129,7 @@
                             <DockPanel DockPanel.Dock="Top" Margin="10" LastChildFill="True">
                                 <DockPanel DockPanel.Dock="Left">
                                     <TextBlock DockPanel.Dock="Top" Text="Http Method"/>
-                                    <ComboBox Margin="0 5" Width="70"></ComboBox>
+                                    <ComboBox Margin="0 5" Width="70" Text="{Binding RESTCallItem.HttpVerb}"></ComboBox>
                                 </DockPanel>
                                 <DockPanel DockPanel.Dock="Left" Margin="10 0">
                                     <TextBlock DockPanel.Dock="Top" Text="Base URL"/>
@@ -137,7 +137,7 @@
                                 </DockPanel>
                                 <DockPanel DockPanel.Dock="Left">
                                     <TextBlock DockPanel.Dock="Top" Text="Route"/>
-                                    <TextBox Margin="0 5" ></TextBox>
+                                    <TextBox Margin="0 5" Text="{Binding RESTCallItem.Route}"></TextBox>
                                 </DockPanel>
                             </DockPanel>
                         </DockPanel>

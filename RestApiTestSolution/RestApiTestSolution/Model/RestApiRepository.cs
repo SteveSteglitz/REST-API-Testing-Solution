@@ -12,6 +12,10 @@ namespace RestApiTestSolution.Model
     {
         public IList<String> GetAllProjects(string path)
         {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
             var files = Directory.GetFiles(path, "*.json");
             return files.Select(Path.GetFileNameWithoutExtension).ToList();
         }
