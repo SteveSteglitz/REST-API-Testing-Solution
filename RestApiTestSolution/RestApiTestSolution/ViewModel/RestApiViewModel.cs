@@ -41,13 +41,26 @@ namespace RestApiTestSolution.ViewModel
                 ProjectsIsVisible = ProjectsIsVisible != true;
             });
             SendMessageCommand = new RelayCommand(SendMessage, o => true);
+            SaveRouteCommand = new RelayCommand(SaveRouteCommandExecute, o => true);
+            SaveRESTCAllItemCommand = new RelayCommand(SaveRESTCAllItemCommandExecute, o => true);
             AllProjectNames = new ObservableCollection<string>();
             RESTCallItems = new ObservableCollection<RestApiCallItem>();
+            SubFolder = "Projects";
             GetAllProjectNames();
             ProjectsIsVisible = true;
             IsProjectDeleteFieldEnable = true;
             IsProjectNewFieldEnable = true;
             IsProjectSaveFieldEnable = false;
+        }
+
+        private void SaveRESTCAllItemCommandExecute(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveRouteCommandExecute(object obj)
+        {
+            _manager.SaveProject(SubFolder, RESTCallProject);
         }
 
         private void SendMessage(Object obj)
@@ -119,6 +132,10 @@ namespace RestApiTestSolution.ViewModel
 
         public ICommand SendMessageCommand { get; set; }
 
+        public ICommand SaveRouteCommand { get; set; }
+
+        public ICommand SaveRESTCAllItemCommand { get; set; }
+
         public IEnumerable<HttpVerb> HttpVerbsEnumValues => Enum.GetValues(typeof(HttpVerb)).Cast<HttpVerb>();
 
         public ObservableCollection<string> AllProjectNames { get; set; }
@@ -144,6 +161,8 @@ namespace RestApiTestSolution.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        public string SubFolder { get; set; }
 
         public string AccessToken { get; set; }
 
@@ -202,7 +221,7 @@ namespace RestApiTestSolution.ViewModel
 
         public void LoadProject(string projectName)
         {
-            RESTCallProject = _manager.LoadProject($"Projects\\{projectName}");
+            RESTCallProject = _manager.LoadProject(SubFolder, projectName);
             foreach (var restCallItem in RESTCallProject.Items)
             {
                 RESTCallItems.Add(restCallItem);
@@ -213,7 +232,7 @@ namespace RestApiTestSolution.ViewModel
 
         private void SaveProject()
         {
-            _manager.SaveProject(RESTCallProject);
+            _manager.SaveProject(SubFolder, RESTCallProject);
         }
     }
 }

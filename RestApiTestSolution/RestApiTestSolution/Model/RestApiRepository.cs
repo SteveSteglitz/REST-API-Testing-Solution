@@ -20,16 +20,24 @@ namespace RestApiTestSolution.Model
             return files.Select(Path.GetFileNameWithoutExtension).ToList();
         }
 
-        public RestApiCall ReadRestCallFile(string projectName)
+        public RestApiCall ReadRestCallFile(string path, string projectName)
         {
-            var jsonData = System.IO.File.ReadAllText($"{projectName}.json");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            var jsonData = System.IO.File.ReadAllText($"{path}\\{projectName}.json");
             return JsonConvert.DeserializeObject<RestApiCall>(jsonData);
         }
 
-        public void WriteRestCallFile(RestApiCall restCall)
+        public void WriteRestCallFile(string path, RestApiCall restCall)
         {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
             var jsonData = JsonConvert.SerializeObject(restCall);
-            System.IO.File.WriteAllText($"{restCall.Project}.json", jsonData);
+            System.IO.File.WriteAllText($"{path}\\{restCall.Project}.json", jsonData);
         }
     }
 }

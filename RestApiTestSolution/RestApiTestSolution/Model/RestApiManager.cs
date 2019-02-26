@@ -20,14 +20,14 @@ namespace RestApiTestSolution.Model
             return _repository.GetAllProjects(path);
         }
 
-        public void SaveProject(RestApiCall restApiCall)
+        public void SaveProject(string path, RestApiCall restApiCall)
         {
-            _repository.WriteRestCallFile(restApiCall);
+            _repository.WriteRestCallFile(path, restApiCall);
         }
 
-        public RestApiCall LoadProject(string projectName)
+        public RestApiCall LoadProject(string path, string projectName)
         {
-            return _repository.ReadRestCallFile(projectName);
+            return _repository.ReadRestCallFile(path, projectName);
         }
     }
 }
