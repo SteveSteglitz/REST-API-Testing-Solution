@@ -37,18 +37,19 @@ namespace RestApiTestSolution.ViewModel
         {
             _manager = manager;
             ShowProjectsCommand = new RelayCommand(o => { ProjectsIsVisible = ProjectsIsVisible != true; });
-            SendMessageCommand = new AsyncCommand(async () => {
-                var responseMessage = _manager.SendHttpRequest(AccessToken, RESTCallProject, RESTCallItem, CancellationToken.None).ConfigureAwait(false);
-                ReceiveMessage = await responseMessage;
-                if (!string.IsNullOrEmpty(ReceiveMessage))
-                {
-                    dynamic d = JObject.Parse(ReceiveMessage);
-                    if (d.AccessToken != null)
-                    {
-                        AccessToken = d.AccessToken;
-                    }
-                }
-            } );
+            //SendMessageCommand = new AsyncCommand(async () => {
+            //    var responseMessage = _manager.SendHttpRequest(AccessToken, RESTCallProject, RESTCallItem, CancellationToken.None);//.ConfigureAwait(false);
+            //    ReceiveMessage = await responseMessage;
+            //    if (!string.IsNullOrEmpty(ReceiveMessage))
+            //    {
+            //        dynamic d = JObject.Parse(ReceiveMessage);
+            //        if (d.AccessToken != null)
+            //        {
+            //            AccessToken = d.AccessToken;
+            //        }
+            //    }
+            //} );
+            SendMessageCommand = new RelayCommand(SendMessage, o => true);
             SaveRouteCommand = new RelayCommand(SaveRouteCommandExecute, o => true);
             SaveRESTCAllItemCommand = new RelayCommand(SaveRESTCAllItemCommandExecute, o => true);
             AllProjectNames = new ObservableCollection<string>();
@@ -85,19 +86,19 @@ namespace RestApiTestSolution.ViewModel
             _manager.SaveProject(SubFolder, RESTCallProject);
         }
 
-        private void SendMessage(Object obj)
+        private async void SendMessage(Object obj)
         {
-            Task.Run(async () => { await Send(); });
-            //var responseMessage = _manager.SendHttpRequest(AccessToken, RESTCallProject, RESTCallItem, CancellationToken.None);
-            //ReceiveMessage = await responseMessage;
-            //if (!string.IsNullOrEmpty(ReceiveMessage))
-            //{
-            //    dynamic d = JObject.Parse(ReceiveMessage);
-            //    if (d.AccessToken != null)
-            //    {
-            //        AccessToken = d.AccessToken;
-            //    }
-            //}
+            //Send().Wait();
+            var responseMessage = await _manager.SendHttpRequest(AccessToken, RESTCallProject, RESTCallItem, CancellationToken.None);
+            ReceiveMessage = responseMessage;
+            if (!string.IsNullOrEmpty(ReceiveMessage) && responseMessage.Contains("AccessToken"))
+            {
+                dynamic d = JObject.Parse(ReceiveMessage);
+                if (d.AccessToken != null)
+                {
+                    AccessToken = d.AccessToken;
+                }
+            }
         }
 
         private async Task Send()

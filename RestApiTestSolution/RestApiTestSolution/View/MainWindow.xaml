@@ -8,6 +8,7 @@
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"         
         xmlns:viewModel="clr-namespace:RestApiTestSolution.ViewModel"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:scintillaNet="clr-namespace:ScintillaNET;assembly=ScintillaNET"
         mc:Ignorable="d"
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
@@ -182,7 +183,11 @@
                                     <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="#FFC7F5FF">
                                         <TextBlock DockPanel.Dock="Left" Text="Receive Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
                                     </DockPanel>
-                                    <TextBox Text="{Binding ReceiveMessage}"/>
+                                    <!--<TextBox Text="{Binding ReceiveMessage}" HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" TextOptions.TextFormattingMode="Display"/>-->
+                                    <WindowsFormsHost DockPanel.Dock="Top">
+                                        <scintillaNet:Scintilla  Text="{Binding ReceiveMessage}"></scintillaNet:Scintilla>
+                                    </WindowsFormsHost>
+                                    <!--<TextBox Text="{Binding ReceiveMessage}" HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" TextOptions.TextFormattingMode="Display"/>-->
                                 </DockPanel>
                             </Grid>
                         </Grid>

@@ -37,32 +37,38 @@ namespace RestApiTestSolution.Model
         {
             ServicePointManager.ServerCertificateValidationCallback = (message, cert, chain, errors) => true;
             using (var client = new HttpClient())
-            using (var request = new HttpRequestMessage(GetHttpMethod(restApiCallItem.HttpVerb), $"{restApiCallProject.BaseUrl}{restApiCallItem.Route}"))
-            using (var httpContent = CreateHttpContent(restApiCallItem.Body))
             {
-                request.Content = httpContent;
+                client.BaseAddress = new Uri(restApiCallProject.BaseUrl);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
                 if (!string.IsNullOrEmpty(restApiCallProject.AuthorizationScheme) &&
-                    !string.IsNullOrEmpty(restApiCallProject.AuthorizationParameter) &&
-                    !string.IsNullOrEmpty(accessToken))
+                        !string.IsNullOrEmpty(restApiCallProject.AuthorizationParameter) &&
+                        !string.IsNullOrEmpty(accessToken))
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(restApiCallProject.AuthorizationScheme, accessToken);
                 }
 
-                using (var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                if (restApiCallItem.HttpVerb == "GET")
                 {
-                    response.EnsureSuccessStatusCode();
-
-                    return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    HttpResponseMessage response = await client.GetAsync($"slmobileApi/{restApiCallItem.Route}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseString = await response.Content.ReadAsStringAsync();
+                        return responseString;
+                    }
+                }else if (restApiCallItem.HttpVerb == "POST")
+                {
+                    HttpResponseMessage response = await client.PostAsync($"slmobileApi/{restApiCallItem.Route}", CreateHttpContent(restApiCallItem.Body));
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return await response.Content.ReadAsStringAsync();
+                    }
                 }
-
-                //using (var response = await client
-                //    .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
-                //    .ConfigureAwait(false))
-                //{
-                //    response.EnsureSuccessStatusCode();
-                //    return await response.Content.ReadAsStringAsync();
-                //}
             }
+
+            return String.Empty;
+
         }
 
         private HttpMethod GetHttpMethod(string httpVerb)
