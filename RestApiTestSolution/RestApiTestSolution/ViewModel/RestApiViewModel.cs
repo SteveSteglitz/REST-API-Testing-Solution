@@ -36,11 +36,19 @@ namespace RestApiTestSolution.ViewModel
         public RestApiViewModel(IRestApiManager manager)
         {
             _manager = manager;
-            ShowProjectsCommand = new RelayCommand(o =>
-            {
-                ProjectsIsVisible = ProjectsIsVisible != true;
-            });
-            SendMessageCommand = new RelayCommand(SendMessage, o => true);
+            ShowProjectsCommand = new RelayCommand(o => { ProjectsIsVisible = ProjectsIsVisible != true; });
+            SendMessageCommand = new AsyncCommand(async () => {
+                var responseMessage = _manager.SendHttpRequest(AccessToken, RESTCallProject, RESTCallItem, CancellationToken.None).ConfigureAwait(false);
+                ReceiveMessage = await responseMessage;
+                if (!string.IsNullOrEmpty(ReceiveMessage))
+                {
+                    dynamic d = JObject.Parse(ReceiveMessage);
+                    if (d.AccessToken != null)
+                    {
+                        AccessToken = d.AccessToken;
+                    }
+                }
+            } );
             SaveRouteCommand = new RelayCommand(SaveRouteCommandExecute, o => true);
             SaveRESTCAllItemCommand = new RelayCommand(SaveRESTCAllItemCommandExecute, o => true);
             AllProjectNames = new ObservableCollection<string>();
@@ -52,6 +60,20 @@ namespace RestApiTestSolution.ViewModel
             IsProjectNewFieldEnable = true;
             IsProjectSaveFieldEnable = false;
         }
+
+        //private async Task Send()
+        //{
+        //    var responseMessage = _manager.SendHttpRequest(AccessToken, RESTCallProject, RESTCallItem, CancellationToken.None).ConfigureAwait(false);
+        //    ReceiveMessage = await responseMessage;
+        //    if (!string.IsNullOrEmpty(ReceiveMessage))
+        //    {
+        //        dynamic d = JObject.Parse(ReceiveMessage);
+        //        if (d.AccessToken != null)
+        //        {
+        //            AccessToken = d.AccessToken;
+        //        }
+        //    }
+        //}
 
         private void SaveRESTCAllItemCommandExecute(object obj)
         {
@@ -65,65 +87,29 @@ namespace RestApiTestSolution.ViewModel
 
         private void SendMessage(Object obj)
         {
-            HttpMethod httpMethod;
-            switch (RESTCallItem.HttpVerb)
-            {
-                case HttpVerb.GET:
-                    PostStreamAsync(RESTCallItem.Body, HttpMethod.Get, CancellationToken.None).Wait();
-                    break;
-                case HttpVerb.POST:
-                    PostStreamAsync(RESTCallItem.Body, HttpMethod.Post, CancellationToken.None).Wait();
-                    break;
-                case HttpVerb.PUT:
-                    httpMethod = HttpMethod.Put;
-                    break;
-                case HttpVerb.DELETE:
-                    httpMethod = HttpMethod.Delete;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            //PostStreamAsync(RESTCallItem.Body, httpMethod, CancellationToken.None).Wait();
+            Task.Run(async () => { await Send(); });
+            //var responseMessage = _manager.SendHttpRequest(AccessToken, RESTCallProject, RESTCallItem, CancellationToken.None);
+            //ReceiveMessage = await responseMessage;
+            //if (!string.IsNullOrEmpty(ReceiveMessage))
+            //{
+            //    dynamic d = JObject.Parse(ReceiveMessage);
+            //    if (d.AccessToken != null)
+            //    {
+            //        AccessToken = d.AccessToken;
+            //    }
+            //}
+        }
+
+        private async Task Send()
+        {
+            var responseMessage = _manager.SendHttpRequest(AccessToken, RESTCallProject, RESTCallItem, CancellationToken.None).ConfigureAwait(false);
+            ReceiveMessage = await responseMessage;
             if (!string.IsNullOrEmpty(ReceiveMessage))
             {
                 dynamic d = JObject.Parse(ReceiveMessage);
                 if (d.AccessToken != null)
                 {
                     AccessToken = d.AccessToken;
-                }
-            }
-        }
-
-        private HttpContent CreateHttpContent(string content)
-        {
-            if (content == null) return null;
-            HttpContent httpContent = new StringContent(content);
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-            return httpContent;
-        }
-
-        private async Task PostStreamAsync(string content, HttpMethod httpMethod, CancellationToken cancellationToken)
-        {
-            ServicePointManager.ServerCertificateValidationCallback = (message, cert, chain, errors) => true;
-            using (var client = new HttpClient())
-            using (var request = new HttpRequestMessage(httpMethod, $"{RESTCallProject.BaseUrl}{RESTCallItem.Route}"))
-            using (var httpContent = CreateHttpContent(content))
-            {
-                request.Content = httpContent;
-                if (!string.IsNullOrEmpty(RESTCallProject.AuthorizationScheme) &&
-                    !string.IsNullOrEmpty(RESTCallProject.AuthorizationParameter) &&
-                    !string.IsNullOrEmpty(AccessToken))
-                {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(RESTCallProject.AuthorizationScheme, AccessToken);
-                }
-
-                using (var response = await client
-                    .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
-                    .ConfigureAwait(false))
-                {
-                    response.EnsureSuccessStatusCode();
-                    ReceiveMessage = response.Content.ReadAsStringAsync().Result;
                 }
             }
         }
@@ -136,7 +122,7 @@ namespace RestApiTestSolution.ViewModel
 
         public ICommand SaveRESTCAllItemCommand { get; set; }
 
-        public IEnumerable<HttpVerb> HttpVerbsEnumValues => Enum.GetValues(typeof(HttpVerb)).Cast<HttpVerb>();
+        public IEnumerable<string> HttpVerbsEnumValues => new List<string>{"GET", "POST"};
 
         public ObservableCollection<string> AllProjectNames { get; set; }
 

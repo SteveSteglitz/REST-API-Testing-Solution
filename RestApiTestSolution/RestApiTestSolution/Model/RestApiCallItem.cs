@@ -10,7 +10,7 @@ namespace RestApiTestSolution.Model
     {
         public int Id { get; set; }
 
-        public HttpVerb HttpVerb { get; set; }
+        public string HttpVerb { get; set; }
 
         public string Route { get; set; }
 

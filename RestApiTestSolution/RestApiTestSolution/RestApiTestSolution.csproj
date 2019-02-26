@@ -89,6 +89,7 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="ViewModel\RelayCommandAsync.cs" />
     <Compile Include="ViewModel\RestApiViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
