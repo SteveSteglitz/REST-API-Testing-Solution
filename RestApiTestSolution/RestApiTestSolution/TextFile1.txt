@@ -1,1 +1,3 @@
 ﻿https://stackoverflow.com/questions/33074176/workaround-for-inability-to-bind-to-a-property-that-belongs-to-a-windowsformshos
+https://www.codeproject.com/Articles/42490/Using-AvalonEdit-WPF-Text-Editor
+https://github.com/icsharpcode/SharpDevelop/wiki/AvalonEdit
