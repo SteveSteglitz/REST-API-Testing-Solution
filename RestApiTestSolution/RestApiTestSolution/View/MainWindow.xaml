@@ -9,7 +9,8 @@
         xmlns:viewModel="clr-namespace:RestApiTestSolution.ViewModel"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:scintillaNet="clr-namespace:ScintillaNET;assembly=ScintillaNET"
-        mc:Ignorable="d"
+                 xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+                 mc:Ignorable="d"
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
         WindowStartupLocation="CenterScreen"
@@ -174,7 +175,8 @@
                                         <Button Command="{Binding SaveRESTCAllItemCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SaveSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                                         <Button Command="{Binding SendMessageCommand}" DockPanel.Dock="Right" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome PlaySolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                                     </DockPanel>
-                                    <TextBox Text="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"/>
+                                    <!--<TextBox Text="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"/>-->
+                                    <viewModel:MvvmTextEditor Text="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SyntaxHighlighting="JSON" x:Name="editorSendMessage"/>
                                 </DockPanel>
                             </Grid>
                             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
@@ -183,11 +185,7 @@
                                     <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="#FFC7F5FF">
                                         <TextBlock DockPanel.Dock="Left" Text="Receive Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
                                     </DockPanel>
-                                    <!--<TextBox Text="{Binding ReceiveMessage}" HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" TextOptions.TextFormattingMode="Display"/>-->
-                                    <WindowsFormsHost DockPanel.Dock="Top">
-                                        <scintillaNet:Scintilla  Text="{Binding ReceiveMessage}"></scintillaNet:Scintilla>
-                                    </WindowsFormsHost>
-                                    <!--<TextBox Text="{Binding ReceiveMessage}" HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" TextOptions.TextFormattingMode="Display"/>-->
+                                    <viewModel:MvvmTextEditor Text="{Binding ReceiveMessage}" SyntaxHighlighting="JSON" x:Name="editorReceiveMessage" />
                                 </DockPanel>
                             </Grid>
                         </Grid>

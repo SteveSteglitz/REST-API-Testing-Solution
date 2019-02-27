@@ -123,6 +123,18 @@ namespace RestApiTestSolution.ViewModel
 
         public ICommand SaveRESTCAllItemCommand { get; set; }
 
+        private int _offset;
+
+        public int Offset
+        {
+            get { return _offset; }
+            set
+            {
+                _offset = value;
+                OnPropertyChanged();
+            }
+        }
+
         public IEnumerable<string> HttpVerbsEnumValues => new List<string>{"GET", "POST"};
 
         public ObservableCollection<string> AllProjectNames { get; set; }
@@ -208,6 +220,7 @@ namespace RestApiTestSolution.ViewModel
 
         public void LoadProject(string projectName)
         {
+            RESTCallItems.Clear();
             RESTCallProject = _manager.LoadProject(SubFolder, projectName);
             foreach (var restCallItem in RESTCallProject.Items)
             {
