@@ -14,7 +14,7 @@ namespace RestApiTestSolution.ViewModel
     {
         private IRestApiManager _manager;
         private bool _projectsIsVisible;
-        private IObservable<RestApiCallItem> _restCallItem;
+        private RestApiCallItem _restCallItem;
         private RestApiCall _restCallProject;
         private string _receiveMessage;
         private string _selectedProjectUrl;
@@ -99,17 +99,6 @@ namespace RestApiTestSolution.ViewModel
 
         public ICommand SaveRouteCommand { get; set; }
 
-        private int _offset;
-
-        public int Offset
-        {
-            get { return _offset; }
-            set
-            {
-                _offset = value;
-                OnPropertyChanged();
-            }
-        }
 
         public IEnumerable<string> HttpVerbsEnumValues => new List<string>{"GET", "POST"};
 
@@ -216,6 +205,7 @@ namespace RestApiTestSolution.ViewModel
 
             if (RESTCallProject.ProjectUrls == null) return;
             
+            ProjectUrls.Clear();
             foreach (var url in RESTCallProject.ProjectUrls)
             {
                 ProjectUrls.Add(url);

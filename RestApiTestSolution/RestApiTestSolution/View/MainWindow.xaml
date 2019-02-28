@@ -10,6 +10,7 @@
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:scintillaNet="clr-namespace:ScintillaNET;assembly=ScintillaNET"
                  xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+                 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                  mc:Ignorable="d"
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
@@ -133,7 +134,7 @@
                                 <DataTemplate>
                                     <DockPanel HorizontalAlignment="Stretch">
                                         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                                            <TextBlock Text="GET"/>
+                                            <TextBlock Text="{Binding HttpVerb}"/>
                                             <TextBlock Text="{Binding Route}" Margin="10 0"/>
                                         </StackPanel>
                                         <Rectangle DockPanel.Dock="Top" HorizontalAlignment="Stretch" Fill="Blue" Height="1"/>
@@ -197,7 +198,11 @@
                                         <Button Command="{Binding SendMessageCommand}" DockPanel.Dock="Right" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome PlaySolid, Height=13, Width=13}" Margin="7 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                                     </DockPanel>
                                     <!--<TextBox Text="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"/>-->
-                                    <viewModel:MvvmTextEditor Text="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SyntaxHighlighting="JSON" x:Name="editorSendMessage"/>
+                                    <avalonedit:TextEditor SyntaxHighlighting="JSON" x:Name="editorSendMessage">
+                                        <i:Interaction.Behaviors>
+                                            <local:AvalonEditBehaviour GiveMeTheText="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </i:Interaction.Behaviors>
+                                    </avalonedit:TextEditor>
                                 </DockPanel>
                             </Grid>
                             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
@@ -206,7 +211,11 @@
                                     <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="#FFC7F5FF">
                                         <TextBlock DockPanel.Dock="Left" Text="Receive Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
                                     </DockPanel>
-                                    <viewModel:MvvmTextEditor Text="{Binding ReceiveMessage}" SyntaxHighlighting="JSON" x:Name="editorReceiveMessage" />
+                                    <avalonedit:TextEditor SyntaxHighlighting="JSON" x:Name="editorReceiveMessage">
+                                        <i:Interaction.Behaviors>
+                                            <local:AvalonEditBehaviour GiveMeTheText="{Binding ReceiveMessage}"/>
+                                        </i:Interaction.Behaviors>
+                                    </avalonedit:TextEditor>
                                 </DockPanel>
                             </Grid>
                         </Grid>

@@ -60,10 +60,7 @@ namespace RestApiTestSolution.Model
                 }else if (restApiCallItem.HttpVerb == "POST")
                 {
                     HttpResponseMessage response = await client.PostAsync($"slmobileApi/{restApiCallItem.Route}", CreateHttpContent(restApiCallItem.Body));
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return await response.Content.ReadAsStringAsync();
-                    }
+                    return await response.Content.ReadAsStringAsync();
                 }
             }
 

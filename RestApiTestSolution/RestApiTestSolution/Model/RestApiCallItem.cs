@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.ComponentModel;
 namespace RestApiTestSolution.Model
 {
-    public class RestApiCallItem
+    public class RestApiCallItem 
     {
         public int Id { get; set; }
 

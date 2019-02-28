@@ -1,1 +1,19 @@
-{"Project":"ExampleProject","BaseUrl":"https://slmde.westeurope.cloudapp.azure.com/slmobileApi","ContentType":"application/json","AuthorizationScheme":"LoginId","AuthorizationParameter":"$AccessToken","Items":[{"Id":0,"HttpVerb":0,"Route":"/login","Body":"{\r\n    \"username\": \"mdeSZ\",\r\n    \"password\": \"sl$001\",\r\n    \"LoginKind\": \"MdeApi\"\r\n}"}]}
+{
+    "Project": "SelectLine API",
+    "ProjectUrls": [
+        "https://slmde.westeurope.cloudapp.azure.com/slmobileApi",
+        "https://slmde1.westeurope.cloudapp.azure.com/slmobileApi",
+        "http://localhost:9000"
+    ],
+    "ContentType": "application/json",
+    "AuthorizationScheme": "LoginId",
+    "AuthorizationParameter": "$AccessToken",
+    "Items": [
+        {
+            "Id": 0,
+            "HttpVerb": 0,
+            "Route": "/login",
+            "Body": "{\r\n    \"username\": \"mdeSZ\",\r\n    \"password\": \"sl$001\",\r\n    \"LoginKind\": \"MdeApi\"\r\n}"
+        }
+    ]
+}
