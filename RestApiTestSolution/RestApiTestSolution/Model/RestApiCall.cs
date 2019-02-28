@@ -10,7 +10,7 @@ namespace RestApiTestSolution.Model
     {
         public string Project { get; set; }
 
-        public string BaseUrl { get; set; }
+        public List<string> ProjectUrls { get; set; }
 
         public string ContentType { get; set; }
 

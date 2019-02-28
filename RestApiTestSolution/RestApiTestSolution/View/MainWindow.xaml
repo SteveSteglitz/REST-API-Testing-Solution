@@ -14,7 +14,7 @@
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
         WindowStartupLocation="CenterScreen"
-        Title="REST API Test Solution" Height="450" Width="800"
+        Title="REST API Test Solution" Height="850" Width="1200"
         d:DataContext="{d:DesignInstance viewModel:RestApiViewModel, IsDesignTimeCreatable=True}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey"/>
@@ -33,7 +33,7 @@
                 <!--Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}"-->
                 <Grid Background="White">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="10*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -54,8 +54,9 @@
                     <Grid Column="1" Row="0">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*" MinWidth="300"/>
+                                <ColumnDefinition Width="4*" MinWidth="450"/>
+                                <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
@@ -89,8 +90,18 @@
                             </Grid>
                             <Grid Column="1" Row="0">
                                 <DockPanel LastChildFill="True" Margin="10">
-                                    <TextBlock DockPanel.Dock="Top" Text="Base URL"/>
-                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.BaseUrl}" Margin="0 5"/>
+                                    <DockPanel DockPanel.Dock="Top">
+                                        <TextBlock DockPanel.Dock="Left" Text="Base URL 1"/>
+                                    </DockPanel>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding ProjectUrls[0]}" Margin="0 5"/>
+                                    <TextBlock DockPanel.Dock="Top" Text="Base URL 2"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding ProjectUrls[1]}" Margin="0 5"/>
+                                    <TextBlock DockPanel.Dock="Top" Text="Base URL 3"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding ProjectUrls[2]}" Margin="0 5"/>
+                                </DockPanel>
+                            </Grid>
+                            <Grid Column="2" Row="0">
+                                <DockPanel LastChildFill="True" Margin="10">
                                     <TextBlock DockPanel.Dock="Top" Text="Description"/>
                                     <TextBox DockPanel.Dock="Top" Margin="0 5 0 0" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"/>
                                 </DockPanel>
@@ -147,20 +158,31 @@
                                 <TextBlock Text="Route Settings" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
                                 <Button Command="{Binding SaveRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SaveSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                             </StackPanel>
-                            <DockPanel DockPanel.Dock="Top" Margin="10" LastChildFill="True">
-                                <DockPanel DockPanel.Dock="Left">
-                                    <TextBlock DockPanel.Dock="Top" Text="Http Method"/>
-                                    <ComboBox Margin="0 5" Width="70" ItemsSource="{Binding HttpVerbsEnumValues}" SelectedItem="{Binding RESTCallItem.HttpVerb}"></ComboBox>
-                                </DockPanel>
-                                <DockPanel DockPanel.Dock="Left" Margin="10 0">
-                                    <TextBlock DockPanel.Dock="Top" Text="Base URL"/>
-                                    <TextBlock Margin="0 9" Text="{Binding RESTCallProject.BaseUrl}"/>
-                                </DockPanel>
-                                <DockPanel DockPanel.Dock="Left">
-                                    <TextBlock DockPanel.Dock="Top" Text="Route"/>
-                                    <TextBox Margin="0 5" Text="{Binding RESTCallItem.Route}"></TextBox>
-                                </DockPanel>
-                            </DockPanel>
+                            <Grid DockPanel.Dock="Top" Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" MinWidth="100"/>
+                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="4*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Column="0">
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Top" Text="Http Method" Margin=" 0 0 0 5"/>
+                                        <ComboBox  ItemsSource="{Binding HttpVerbsEnumValues}" SelectedItem="{Binding RESTCallItem.HttpVerb}"></ComboBox>
+                                    </DockPanel>
+                                </Grid>
+                                <Grid Column="1">
+                                    <DockPanel Margin="10 0">
+                                        <TextBlock DockPanel.Dock="Top" Text="Base URL" Margin=" 0 0 0 5"/>
+                                        <ComboBox ItemsSource="{Binding ProjectUrls}" SelectedItem="{Binding SelectedProjectUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding RESTCallProject.BaseUrl}"/>
+                                    </DockPanel>
+                                </Grid>
+                                <Grid Column="2">
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Top" Text="Route" Margin=" 0 0 0 5"/>
+                                        <TextBox Text="{Binding RESTCallItem.Route}"></TextBox>
+                                    </DockPanel>
+                                </Grid>
+                            </Grid>
                         </DockPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>

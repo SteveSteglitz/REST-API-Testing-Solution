@@ -28,6 +28,7 @@ namespace RestApiTestSolution.ViewModel
         private RestApiCallItem _restCallItem;
         private RestApiCall _restCallProject;
         private string _receiveMessage;
+        private string _selectedProjectUrl;
 
         public RestApiViewModel()
         {
@@ -53,6 +54,7 @@ namespace RestApiTestSolution.ViewModel
             SaveRouteCommand = new RelayCommand(SaveRouteCommandExecute, o => true);
             SaveRESTCAllItemCommand = new RelayCommand(SaveRESTCAllItemCommandExecute, o => true);
             AllProjectNames = new ObservableCollection<string>();
+            ProjectUrls = new ObservableCollection<string>();
             RESTCallItems = new ObservableCollection<RestApiCallItem>();
             SubFolder = "Projects";
             GetAllProjectNames();
@@ -88,31 +90,35 @@ namespace RestApiTestSolution.ViewModel
 
         private async void SendMessage(Object obj)
         {
-            //Send().Wait();
-            var responseMessage = await _manager.SendHttpRequest(AccessToken, RESTCallProject, RESTCallItem, CancellationToken.None);
-            ReceiveMessage = responseMessage;
-            if (!string.IsNullOrEmpty(ReceiveMessage) && responseMessage.Contains("AccessToken"))
+            try
             {
-                dynamic d = JObject.Parse(ReceiveMessage);
-                if (d.AccessToken != null)
+                var responseMessage = await _manager.SendHttpRequest(AccessToken, SelectedProjectUrl, RESTCallProject,
+                    RESTCallItem, CancellationToken.None);
+                ReceiveMessage = responseMessage;
+                if (!string.IsNullOrEmpty(ReceiveMessage) && responseMessage.Contains("AccessToken"))
                 {
-                    AccessToken = d.AccessToken;
+                    dynamic d = JObject.Parse(ReceiveMessage);
+                    if (d.AccessToken != null)
+                    {
+                        AccessToken = d.AccessToken;
+                    }
                 }
             }
-        }
+            catch (System.Net.Http.HttpRequestException exception)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine(exception.Message);
+                sb.AppendLine("");
+                sb.AppendLine("===========================");
+                sb.AppendLine("Details:");
+                if (exception.InnerException != null)
+                {
+                    sb.AppendLine(exception.InnerException.Message);
+                }
 
-        private async Task Send()
-        {
-            var responseMessage = _manager.SendHttpRequest(AccessToken, RESTCallProject, RESTCallItem, CancellationToken.None).ConfigureAwait(false);
-            ReceiveMessage = await responseMessage;
-            if (!string.IsNullOrEmpty(ReceiveMessage))
-            {
-                dynamic d = JObject.Parse(ReceiveMessage);
-                if (d.AccessToken != null)
-                {
-                    AccessToken = d.AccessToken;
-                }
+                ReceiveMessage = sb.ToString();
             }
+
         }
 
         public ICommand ShowProjectsCommand { get; set; }
@@ -139,7 +145,19 @@ namespace RestApiTestSolution.ViewModel
 
         public ObservableCollection<string> AllProjectNames { get; set; }
 
+        public ObservableCollection<string> ProjectUrls { get; set; }
+
         public ObservableCollection<RestApiCallItem> RESTCallItems { get; set; }
+
+        public string SelectedProjectUrl
+        {
+            get => _selectedProjectUrl;
+            set
+            {
+                _selectedProjectUrl = value;
+                OnPropertyChanged();
+            }
+        }
 
         public RestApiCall RESTCallProject
         {
@@ -226,8 +244,14 @@ namespace RestApiTestSolution.ViewModel
             {
                 RESTCallItems.Add(restCallItem);
             }
-
             RESTCallItem = RESTCallProject.Items.FirstOrDefault();
+
+            foreach (var url in RESTCallProject.ProjectUrls)
+            {
+                ProjectUrls.Add(url);
+            }
+
+            SelectedProjectUrl = ProjectUrls.First();
         }
 
         private void SaveProject()

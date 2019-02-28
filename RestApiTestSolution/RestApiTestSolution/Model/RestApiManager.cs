@@ -32,13 +32,13 @@ namespace RestApiTestSolution.Model
             return _repository.ReadRestCallFile(path, projectName);
         }
 
-        public async Task<string> SendHttpRequest(string accessToken, RestApiCall restApiCallProject, RestApiCallItem restApiCallItem,
+        public async Task<string> SendHttpRequest(string accessToken, string baseUrl, RestApiCall restApiCallProject, RestApiCallItem restApiCallItem,
             CancellationToken cancellationToken)
         {
             ServicePointManager.ServerCertificateValidationCallback = (message, cert, chain, errors) => true;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(restApiCallProject.BaseUrl);
+                client.BaseAddress = new Uri(baseUrl);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
