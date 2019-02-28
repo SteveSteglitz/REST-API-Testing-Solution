@@ -1,21 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Security.Policy;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Annotations;
-using System.Windows.Documents;
 using System.Windows.Input;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestApiTestSolution.Model;
 
@@ -25,7 +14,7 @@ namespace RestApiTestSolution.ViewModel
     {
         private IRestApiManager _manager;
         private bool _projectsIsVisible;
-        private RestApiCallItem _restCallItem;
+        private IObservable<RestApiCallItem> _restCallItem;
         private RestApiCall _restCallProject;
         private string _receiveMessage;
         private string _selectedProjectUrl;
@@ -38,21 +27,9 @@ namespace RestApiTestSolution.ViewModel
         {
             _manager = manager;
             ShowProjectsCommand = new RelayCommand(o => { ProjectsIsVisible = ProjectsIsVisible != true; });
-            //SendMessageCommand = new AsyncCommand(async () => {
-            //    var responseMessage = _manager.SendHttpRequest(AccessToken, RESTCallProject, RESTCallItem, CancellationToken.None);//.ConfigureAwait(false);
-            //    ReceiveMessage = await responseMessage;
-            //    if (!string.IsNullOrEmpty(ReceiveMessage))
-            //    {
-            //        dynamic d = JObject.Parse(ReceiveMessage);
-            //        if (d.AccessToken != null)
-            //        {
-            //            AccessToken = d.AccessToken;
-            //        }
-            //    }
-            //} );
             SendMessageCommand = new RelayCommand(SendMessage, o => true);
+            CreateRouteCommand = new RelayCommand(CreateRouteCommandExecute, o => true);
             SaveRouteCommand = new RelayCommand(SaveRouteCommandExecute, o => true);
-            SaveRESTCAllItemCommand = new RelayCommand(SaveRESTCAllItemCommandExecute, o => true);
             AllProjectNames = new ObservableCollection<string>();
             ProjectUrls = new ObservableCollection<string>();
             RESTCallItems = new ObservableCollection<RestApiCallItem>();
@@ -64,27 +41,20 @@ namespace RestApiTestSolution.ViewModel
             IsProjectSaveFieldEnable = false;
         }
 
-        //private async Task Send()
-        //{
-        //    var responseMessage = _manager.SendHttpRequest(AccessToken, RESTCallProject, RESTCallItem, CancellationToken.None).ConfigureAwait(false);
-        //    ReceiveMessage = await responseMessage;
-        //    if (!string.IsNullOrEmpty(ReceiveMessage))
-        //    {
-        //        dynamic d = JObject.Parse(ReceiveMessage);
-        //        if (d.AccessToken != null)
-        //        {
-        //            AccessToken = d.AccessToken;
-        //        }
-        //    }
-        //}
 
-        private void SaveRESTCAllItemCommandExecute(object obj)
+        private void CreateRouteCommandExecute(object obj)
         {
-            throw new NotImplementedException();
+            RESTCallItem = new RestApiCallItem();
+            RESTCallProject.Items.Add(RESTCallItem);
         }
 
         private void SaveRouteCommandExecute(object obj)
         {
+            var itemIdx = RESTCallProject.Items.IndexOf(RESTCallItem);
+            var item = RESTCallProject.Items[itemIdx];
+            item.HttpVerb = RESTCallItem.HttpVerb;
+            item.Route = RESTCallItem.Route;
+            item.Body = RESTCallItem.Body;
             _manager.SaveProject(SubFolder, RESTCallProject);
         }
 
@@ -125,9 +95,9 @@ namespace RestApiTestSolution.ViewModel
 
         public ICommand SendMessageCommand { get; set; }
 
-        public ICommand SaveRouteCommand { get; set; }
+        public ICommand CreateRouteCommand { get; set; }
 
-        public ICommand SaveRESTCAllItemCommand { get; set; }
+        public ICommand SaveRouteCommand { get; set; }
 
         private int _offset;
 
@@ -222,8 +192,6 @@ namespace RestApiTestSolution.ViewModel
 
         public bool IsProjectSaveFieldEnable { get; set; }
 
-        public bool IsRouteNewFieldEnable { get; set; }
-
         public bool IsRouteDeleteFieldEnable { get; set; }
 
         public bool IsRouteSaveFieldEnable { get; set; }
@@ -246,6 +214,8 @@ namespace RestApiTestSolution.ViewModel
             }
             RESTCallItem = RESTCallProject.Items.FirstOrDefault();
 
+            if (RESTCallProject.ProjectUrls == null) return;
+            
             foreach (var url in RESTCallProject.ProjectUrls)
             {
                 ProjectUrls.Add(url);

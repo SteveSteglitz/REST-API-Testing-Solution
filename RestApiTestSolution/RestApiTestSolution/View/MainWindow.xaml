@@ -125,7 +125,7 @@
                     <DockPanel LastChildFill="True">
                         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="#FFC7F5FF">
                             <TextBlock Text="Available Routes" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                            <Button IsEnabled="{Binding IsRouteNewFieldEnable}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                            <Button Command="{Binding CreateRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                             <Button IsEnabled="{Binding IsRouteDeleteFieldEnable}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome TrashSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                         </StackPanel>
                         <ListView ItemsSource="{Binding RESTCallItems}">
@@ -194,8 +194,7 @@
                                 <DockPanel LastChildFill="True">
                                     <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="#FFC7F5FF">
                                         <TextBlock DockPanel.Dock="Left" Text="Send Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                                        <Button Command="{Binding SaveRESTCAllItemCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SaveSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
-                                        <Button Command="{Binding SendMessageCommand}" DockPanel.Dock="Right" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome PlaySolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                                        <Button Command="{Binding SendMessageCommand}" DockPanel.Dock="Right" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome PlaySolid, Height=13, Width=13}" Margin="7 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                                     </DockPanel>
                                     <!--<TextBox Text="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"/>-->
                                     <viewModel:MvvmTextEditor Text="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SyntaxHighlighting="JSON" x:Name="editorSendMessage"/>
