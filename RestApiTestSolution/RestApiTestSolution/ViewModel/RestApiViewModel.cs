@@ -12,12 +12,14 @@ namespace RestApiTestSolution.ViewModel
 {
     public class RestApiViewModel : BaseViewModel
     {
-        private IRestApiManager _manager;
+        private readonly IRestApiManager _manager;
         private bool _projectsIsVisible;
         private RestApiCallItem _restCallItem;
         private RestApiCall _restCallProject;
         private string _receiveMessage;
         private string _selectedProjectUrl;
+        private ObservableCollection<RestApiCallItem> _restCallItems;
+        private string _selectedProjectName;
 
         public RestApiViewModel()
         {
@@ -29,10 +31,10 @@ namespace RestApiTestSolution.ViewModel
             ShowProjectsCommand = new RelayCommand(o => { ProjectsIsVisible = ProjectsIsVisible != true; });
             SendMessageCommand = new RelayCommand(SendMessage, o => true);
             CreateRouteCommand = new RelayCommand(CreateRouteCommandExecute, o => true);
-            SaveRouteCommand = new RelayCommand(SaveRouteCommandExecute, o => true);
+            DeleteRouteCommand = new RelayCommand(DeleteRouteCommandExecute, o => _restCallItem != null);
+            SaveRouteCommand = new RelayCommand(SaveRouteCommandExecute, o => RESTCallItem != null);
             AllProjectNames = new ObservableCollection<string>();
             ProjectUrls = new ObservableCollection<string>();
-            RESTCallItems = new ObservableCollection<RestApiCallItem>();
             SubFolder = "Projects";
             GetAllProjectNames();
             ProjectsIsVisible = true;
@@ -41,72 +43,38 @@ namespace RestApiTestSolution.ViewModel
             IsProjectSaveFieldEnable = false;
         }
 
-
-        private void CreateRouteCommandExecute(object obj)
-        {
-            RESTCallItem = new RestApiCallItem();
-            RESTCallProject.Items.Add(RESTCallItem);
-        }
-
-        private void SaveRouteCommandExecute(object obj)
-        {
-            var itemIdx = RESTCallProject.Items.IndexOf(RESTCallItem);
-            var item = RESTCallProject.Items[itemIdx];
-            item.HttpVerb = RESTCallItem.HttpVerb;
-            item.Route = RESTCallItem.Route;
-            item.Body = RESTCallItem.Body;
-            _manager.SaveProject(SubFolder, RESTCallProject);
-        }
-
-        private async void SendMessage(Object obj)
-        {
-            try
-            {
-                var responseMessage = await _manager.SendHttpRequest(AccessToken, SelectedProjectUrl, RESTCallProject,
-                    RESTCallItem, CancellationToken.None);
-                ReceiveMessage = responseMessage;
-                if (!string.IsNullOrEmpty(ReceiveMessage) && responseMessage.Contains("AccessToken"))
-                {
-                    dynamic d = JObject.Parse(ReceiveMessage);
-                    if (d.AccessToken != null)
-                    {
-                        AccessToken = d.AccessToken;
-                    }
-                }
-            }
-            catch (System.Net.Http.HttpRequestException exception)
-            {
-                var sb = new StringBuilder();
-                sb.AppendLine(exception.Message);
-                sb.AppendLine("");
-                sb.AppendLine("===========================");
-                sb.AppendLine("Details:");
-                if (exception.InnerException != null)
-                {
-                    sb.AppendLine(exception.InnerException.Message);
-                }
-
-                ReceiveMessage = sb.ToString();
-            }
-
-        }
-
+        #region Commands
         public ICommand ShowProjectsCommand { get; set; }
 
         public ICommand SendMessageCommand { get; set; }
 
         public ICommand CreateRouteCommand { get; set; }
 
+        public ICommand DeleteRouteCommand { get; set; }
+
         public ICommand SaveRouteCommand { get; set; }
+        #endregion
 
-
-        public IEnumerable<string> HttpVerbsEnumValues => new List<string>{"GET", "POST"};
+        #region Properties
+        public IEnumerable<string> HttpVerbsEnumValues => new List<string> { "GET", "POST" };
 
         public ObservableCollection<string> AllProjectNames { get; set; }
 
-        public ObservableCollection<string> ProjectUrls { get; set; }
+        public string SelectedProjectName
+        {
+            get => _selectedProjectName;
+            set
+            {
+                _selectedProjectName = value;
+                if (value != null)
+                {
+                    LoadProject(value);
+                }
+                OnPropertyChanged();
+            }
+        }
 
-        public ObservableCollection<RestApiCallItem> RESTCallItems { get; set; }
+        public ObservableCollection<string> ProjectUrls { get; set; }
 
         public string SelectedProjectUrl
         {
@@ -144,10 +112,10 @@ namespace RestApiTestSolution.ViewModel
 
         public string ReceiveMessage
         {
-            get { return _receiveMessage; }
+            get => _receiveMessage;
             set
             {
-                _receiveMessage = value; 
+                _receiveMessage = value;
                 OnPropertyChanged();
             }
         }
@@ -174,7 +142,7 @@ namespace RestApiTestSolution.ViewModel
             }
         }
 
-
+        #region Visual State Properties
         public bool IsProjectNewFieldEnable { get; set; }
 
         public bool IsProjectDeleteFieldEnable { get; set; }
@@ -183,7 +151,34 @@ namespace RestApiTestSolution.ViewModel
 
         public bool IsRouteDeleteFieldEnable { get; set; }
 
-        public bool IsRouteSaveFieldEnable { get; set; }
+
+        public bool IsRouteSaveFieldEnable { get; set; }  
+        #endregion
+        
+        #endregion
+
+        private void DeleteRouteCommandExecute(object obj)
+        {
+            RESTCallProject.Items.Remove(RESTCallItem);
+            SaveProject();
+            RESTCallItem = RESTCallProject.Items.FirstOrDefault();
+        }
+
+        private void CreateRouteCommandExecute(object obj)
+        {
+            RESTCallItem = new RestApiCallItem();
+            RESTCallProject.Items.Add(RESTCallItem);
+        }
+
+        private void SaveRouteCommandExecute(object obj)
+        {
+            var itemIdx = RESTCallProject.Items.IndexOf(RESTCallItem);
+            var item = RESTCallProject.Items[itemIdx];
+            item.HttpVerb = RESTCallItem.HttpVerb;
+            item.Route = RESTCallItem.Route;
+            item.Body = RESTCallItem.Body;
+            _manager.SaveProject(SubFolder, RESTCallProject);
+        }
 
         private void GetAllProjectNames()
         {
@@ -195,16 +190,11 @@ namespace RestApiTestSolution.ViewModel
 
         public void LoadProject(string projectName)
         {
-            RESTCallItems.Clear();
             RESTCallProject = _manager.LoadProject(SubFolder, projectName);
-            foreach (var restCallItem in RESTCallProject.Items)
-            {
-                RESTCallItems.Add(restCallItem);
-            }
             RESTCallItem = RESTCallProject.Items.FirstOrDefault();
 
             if (RESTCallProject.ProjectUrls == null) return;
-            
+
             ProjectUrls.Clear();
             foreach (var url in RESTCallProject.ProjectUrls)
             {
@@ -218,5 +208,39 @@ namespace RestApiTestSolution.ViewModel
         {
             _manager.SaveProject(SubFolder, RESTCallProject);
         }
+
+        private async void SendMessage(Object obj)
+        {
+            try
+            {
+                var responseMessage = await _manager.SendHttpRequest(AccessToken, SelectedProjectUrl, RESTCallProject,
+                    RESTCallItem, CancellationToken.None);
+                ReceiveMessage = responseMessage;
+                if (!string.IsNullOrEmpty(ReceiveMessage) && responseMessage.Contains("AccessToken"))
+                {
+                    dynamic d = JObject.Parse(ReceiveMessage);
+                    if (d.AccessToken != null)
+                    {
+                        AccessToken = d.AccessToken;
+                    }
+                }
+            }
+            catch (System.Net.Http.HttpRequestException exception)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine(exception.Message);
+                sb.AppendLine("");
+                sb.AppendLine("===========================");
+                sb.AppendLine("Details:");
+                if (exception.InnerException != null)
+                {
+                    sb.AppendLine(exception.InnerException.Message);
+                }
+
+                ReceiveMessage = sb.ToString();
+            }
+
+        }
+       
     }
 }

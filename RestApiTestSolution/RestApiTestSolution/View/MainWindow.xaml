@@ -19,17 +19,18 @@
         d:DataContext="{d:DesignInstance viewModel:RestApiViewModel, IsDesignTimeCreatable=True}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey"/>
+        <viewModel:HttpMethodColorConverter x:Key="HttpMethodColorConverter"/>
     </Window.Resources>
     <DockPanel Background="LightGray">
         <DockPanel DockPanel.Dock="Top" DataContext="{Binding}" Margin="0 0 0 5">
             <DockPanel LastChildFill="True">
                 <DockPanel DockPanel.Dock="Top" Background="#FFC7F5FF" LastChildFill="False">
                     <TextBlock Text="Project Settings" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                    <Button DockPanel.Dock="Left" IsEnabled="{Binding IsProjectNewFieldEnable}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
-                    <Button DockPanel.Dock="Left" IsEnabled="{Binding IsProjectSaveFieldEnable}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SaveSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                    <Button DockPanel.Dock="Left" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                    <Button DockPanel.Dock="Left" Command="{Binding SaveRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SaveSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                     <Button DockPanel.Dock="Left" IsEnabled="{Binding IsProjectDeleteFieldEnable}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome TrashSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
-                    <Button DockPanel.Dock="Right" Visibility="{Binding ProjectsIsNotVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleDownSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28" Click="Button_Click"/>
-                    <Button DockPanel.Dock="Right" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleUpSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28" Click="Button_Click"/>
+                    <Button DockPanel.Dock="Right" Visibility="{Binding ProjectsIsNotVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleDownSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28" />
+                    <Button DockPanel.Dock="Right" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleUpSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28" />
                 </DockPanel>
                 <!--Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}"-->
                 <Grid Background="White">
@@ -43,13 +44,7 @@
                     <Grid Column="0" Row="0">
                         <DockPanel LastChildFill="True" Margin="10">
                             <TextBlock DockPanel.Dock="Top" Text="Available Projects" Margin="0 0 0 5"/>
-                            <ListView DockPanel.Dock="Top" ItemsSource="{Binding AllProjectNames}">
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
-                                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ProjectSetter_OnHandler"></EventSetter>
-                                    </Style>
-                                </ListView.ItemContainerStyle>
-                            </ListView>
+                            <ListView DockPanel.Dock="Top" ItemsSource="{Binding AllProjectNames}" SelectedItem="{Binding SelectedProjectName}"/>
                         </DockPanel>
                     </Grid>
                     <Grid Column="1" Row="0">
@@ -65,7 +60,7 @@
                             <Grid Column="0" Row="0">
                                 <DockPanel LastChildFill="False" Margin="10">
                                     <TextBlock DockPanel.Dock="Top" Text="Project Name"/>
-                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.Project}" Margin="0 5"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.Project, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0 5"/>
                                     <TextBlock DockPanel.Dock="Top" Text="Content-Type"/>
                                     <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallPrject.ContentType}" Margin="0 5"/>
                                     <Grid DockPanel.Dock="Top">
@@ -127,25 +122,29 @@
                         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="#FFC7F5FF">
                             <TextBlock Text="Available Routes" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
                             <Button Command="{Binding CreateRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
-                            <Button IsEnabled="{Binding IsRouteDeleteFieldEnable}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome TrashSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                            <Button Command="{Binding DeleteRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome TrashSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                         </StackPanel>
-                        <ListView ItemsSource="{Binding RESTCallItems}">
+                        <ListView ItemsSource="{Binding RESTCallProject.Items}" SelectedItem="{Binding RESTCallItem}" x:Name="RouteList">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <DockPanel HorizontalAlignment="Stretch">
-                                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                                            <TextBlock Text="{Binding HttpVerb}"/>
-                                            <TextBlock Text="{Binding Route}" Margin="10 0"/>
-                                        </StackPanel>
-                                        <Rectangle DockPanel.Dock="Top" HorizontalAlignment="Stretch" Fill="Blue" Height="1"/>
-                                    </DockPanel>
+                                    <Grid>
+                                        <Grid.Style>
+                                            <Border ></Border>
+                                        </Grid.Style>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Column="0">
+                                            <Rectangle Fill="{Binding HttpVerb, Converter={StaticResource HttpMethodColorConverter}}"/>
+                                            <TextBlock Text="{Binding HttpVerb}" Margin="5"/>
+                                        </Grid>
+                                        <Grid Column="1">
+                                            <TextBlock Text="{Binding Route}" HorizontalAlignment="Center" Margin="5"/>
+                                        </Grid>
+                                    </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewRESTCallItem_OnHandler"></EventSetter>
-                                </Style>
-                            </ListView.ItemContainerStyle>
                         </ListView>
                     </DockPanel>
                 </DockPanel>

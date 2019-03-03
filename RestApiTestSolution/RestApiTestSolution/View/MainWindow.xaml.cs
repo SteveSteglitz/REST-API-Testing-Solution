@@ -30,29 +30,5 @@ namespace RestApiTestSolution.View
             _viewModel = new RestApiViewModel(new RestApiManager(new RestApiRepository()));
             this.DataContext = _viewModel;
         }
-
-        private void ProjectSetter_OnHandler(object sender, MouseButtonEventArgs e)
-        {
-            var item = sender as ListViewItem;
-            if (item != null && item.IsSelected)
-            {
-                _viewModel.LoadProject(item.Content.ToString());
-                _viewModel.ProjectsIsVisible = false;
-            }
-        }
-
-        private void ListViewRESTCallItem_OnHandler(object sender, MouseButtonEventArgs e)
-        {
-            var item = sender as ListViewItem;
-            if (item != null && item.IsSelected)
-            {
-                _viewModel.RESTCallItem = item.Content as RestApiCallItem;
-            }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            _viewModel.ProjectsIsVisible = !_viewModel.ProjectsIsVisible;
-        }
     }
 }

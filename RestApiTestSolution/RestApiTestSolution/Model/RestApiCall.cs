@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using RestApiTestSolution.Annotations;
 
 namespace RestApiTestSolution.Model
 {
@@ -18,6 +22,6 @@ namespace RestApiTestSolution.Model
 
         public string AuthorizationParameter { get; set; }
 
-        public List<RestApiCallItem> Items { get; set; }
+        public ObservableCollection<RestApiCallItem> Items { get; set; }
     }
 }

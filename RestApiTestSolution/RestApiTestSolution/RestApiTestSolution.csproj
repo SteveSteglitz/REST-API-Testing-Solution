@@ -98,6 +98,7 @@
     <Compile Include="Model\RestApiRepository.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\HttpMethodColorConverter.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\RelayCommandAsync.cs" />
     <Compile Include="ViewModel\RestApiViewModel.cs" />
