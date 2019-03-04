@@ -27,7 +27,7 @@
         <DockPanel DockPanel.Dock="Top" DataContext="{Binding}" Margin="0 0 0 5">
             <DockPanel LastChildFill="True">
                 <DockPanel DockPanel.Dock="Top" Background="{StaticResource HeaderColor}" LastChildFill="False" Height="35">
-                    <TextBlock Text="Project Settings" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                    <TextBlock Text="Project Settings" Margin="5 5 15 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
                     <Button DockPanel.Dock="Left" Command="{Binding NewProjectCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                     <Button DockPanel.Dock="Left" Command="{Binding SaveProjectCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SaveSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                     <Button DockPanel.Dock="Left" Command="{Binding DeleteProjectCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome TrashSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
