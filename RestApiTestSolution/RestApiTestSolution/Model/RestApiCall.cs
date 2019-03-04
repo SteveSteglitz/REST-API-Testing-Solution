@@ -14,13 +14,15 @@ namespace RestApiTestSolution.Model
     {
         public string Project { get; set; }
 
-        public List<string> ProjectUrls { get; set; }
+        public ObservableCollection<string> ProjectUrls { get; set; }
 
         public string ContentType { get; set; }
 
         public string AuthorizationScheme { get; set; }
 
         public string AuthorizationParameter { get; set; }
+
+        public string Description { get; set; }
 
         public ObservableCollection<RestApiCallItem> Items { get; set; }
     }

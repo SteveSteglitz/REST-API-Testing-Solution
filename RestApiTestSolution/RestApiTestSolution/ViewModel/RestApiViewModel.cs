@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Input;
+using System.Windows.Navigation;
 using Newtonsoft.Json.Linq;
 using RestApiTestSolution.Model;
 
@@ -32,7 +33,9 @@ namespace RestApiTestSolution.ViewModel
             SendMessageCommand = new RelayCommand(SendMessage, o => true);
             CreateRouteCommand = new RelayCommand(CreateRouteCommandExecute, o => true);
             DeleteRouteCommand = new RelayCommand(DeleteRouteCommandExecute, o => _restCallItem != null);
-            SaveRouteCommand = new RelayCommand(SaveRouteCommandExecute, o => RESTCallItem != null);
+            NewProjectCommand = new RelayCommand(NewProjectCommandExecute, o => true);
+            SaveProjectCommand = new RelayCommand(SaveProjectCommandExecute, o => RESTCallItem != null || RESTCallProject != null);
+            DeleteProjectCommand = new RelayCommand(DeleteProjectCommandExecute, o => RESTCallProject != null);
             AllProjectNames = new ObservableCollection<string>();
             ProjectUrls = new ObservableCollection<string>();
             SubFolder = "Projects";
@@ -43,6 +46,7 @@ namespace RestApiTestSolution.ViewModel
             IsProjectSaveFieldEnable = false;
         }
 
+
         #region Commands
         public ICommand ShowProjectsCommand { get; set; }
 
@@ -52,7 +56,11 @@ namespace RestApiTestSolution.ViewModel
 
         public ICommand DeleteRouteCommand { get; set; }
 
-        public ICommand SaveRouteCommand { get; set; }
+        public ICommand NewProjectCommand { get; set; }
+
+        public ICommand SaveProjectCommand { get; set; }
+
+        public ICommand DeleteProjectCommand { get; set; }
         #endregion
 
         #region Properties
@@ -170,18 +178,32 @@ namespace RestApiTestSolution.ViewModel
             RESTCallProject.Items.Add(RESTCallItem);
         }
 
-        private void SaveRouteCommandExecute(object obj)
+        private void NewProjectCommandExecute(object obj)
         {
-            var itemIdx = RESTCallProject.Items.IndexOf(RESTCallItem);
-            var item = RESTCallProject.Items[itemIdx];
-            item.HttpVerb = RESTCallItem.HttpVerb;
-            item.Route = RESTCallItem.Route;
-            item.Body = RESTCallItem.Body;
+            RESTCallProject = new RestApiCall
+            {
+                ProjectUrls = new ObservableCollection<string> {"https://", "https://", "https://"}
+            };
+        }
+
+        private void SaveProjectCommandExecute(object obj)
+        {
+            if (RESTCallItem != null)
+            {
+                var itemIdx = RESTCallProject.Items.IndexOf(RESTCallItem);
+                var item = RESTCallProject.Items[itemIdx];
+                item.HttpVerb = RESTCallItem.HttpVerb;
+                item.Route = RESTCallItem.Route;
+                item.Body = RESTCallItem.Body;
+            }
+            
             _manager.SaveProject(SubFolder, RESTCallProject);
+            GetAllProjectNames();
         }
 
         private void GetAllProjectNames()
         {
+            AllProjectNames.Clear();
             foreach (var project in _manager.GetAllProjects(@"Projects\"))
             {
                 AllProjectNames.Add(project);
@@ -207,6 +229,13 @@ namespace RestApiTestSolution.ViewModel
         private void SaveProject()
         {
             _manager.SaveProject(SubFolder, RESTCallProject);
+            GetAllProjectNames();
+        }
+
+        private void DeleteProjectCommandExecute(object obj)
+        {
+            _manager.RemoveProject(SubFolder, RESTCallProject);
+            GetAllProjectNames();
         }
 
         private async void SendMessage(Object obj)

@@ -20,20 +20,22 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey"/>
         <viewModel:HttpMethodColorConverter x:Key="HttpMethodColorConverter"/>
+        <SolidColorBrush x:Key="HeaderColor" Color="#FFC7F5FF"/>
+        <SolidColorBrush x:Key="HeaderLineColor" Color="#FF8FD9EA"/>
     </Window.Resources>
     <DockPanel Background="LightGray">
         <DockPanel DockPanel.Dock="Top" DataContext="{Binding}" Margin="0 0 0 5">
             <DockPanel LastChildFill="True">
-                <DockPanel DockPanel.Dock="Top" Background="#FFC7F5FF" LastChildFill="False">
+                <DockPanel DockPanel.Dock="Top" Background="{StaticResource HeaderColor}" LastChildFill="False" Height="35">
                     <TextBlock Text="Project Settings" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                    <Button DockPanel.Dock="Left" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
-                    <Button DockPanel.Dock="Left" Command="{Binding SaveRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SaveSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
-                    <Button DockPanel.Dock="Left" IsEnabled="{Binding IsProjectDeleteFieldEnable}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome TrashSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
-                    <Button DockPanel.Dock="Right" Visibility="{Binding ProjectsIsNotVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleDownSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28" />
-                    <Button DockPanel.Dock="Right" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleUpSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28" />
+                    <Button DockPanel.Dock="Left" Command="{Binding NewProjectCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                    <Button DockPanel.Dock="Left" Command="{Binding SaveProjectCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SaveSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                    <Button DockPanel.Dock="Left" Command="{Binding DeleteProjectCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome TrashSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                    <Button DockPanel.Dock="Right" Command="{Binding ShowProjectsCommand}" Visibility="{Binding ProjectsIsNotVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleDownSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28" />
+                    <Button DockPanel.Dock="Right" Command="{Binding ShowProjectsCommand}" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleUpSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28" />
                 </DockPanel>
-                <!--Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}"-->
-                <Grid Background="White">
+                <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
+                <Grid Background="White" Height="175" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="10*"/>
@@ -44,7 +46,7 @@
                     <Grid Column="0" Row="0">
                         <DockPanel LastChildFill="True" Margin="10">
                             <TextBlock DockPanel.Dock="Top" Text="Available Projects" Margin="0 0 0 5"/>
-                            <ListView DockPanel.Dock="Top" ItemsSource="{Binding AllProjectNames}" SelectedItem="{Binding SelectedProjectName}"/>
+                            <ListView DockPanel.Dock="Top" ItemsSource="{Binding AllProjectNames}" SelectedItem="{Binding SelectedProjectName}" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
                         </DockPanel>
                     </Grid>
                     <Grid Column="1" Row="0">
@@ -62,7 +64,7 @@
                                     <TextBlock DockPanel.Dock="Top" Text="Project Name"/>
                                     <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.Project, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0 5"/>
                                     <TextBlock DockPanel.Dock="Top" Text="Content-Type"/>
-                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallPrject.ContentType}" Margin="0 5"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ContentType}" Margin="0 5"/>
                                     <Grid DockPanel.Dock="Top">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -89,17 +91,17 @@
                                     <DockPanel DockPanel.Dock="Top">
                                         <TextBlock DockPanel.Dock="Left" Text="Base URL 1"/>
                                     </DockPanel>
-                                    <TextBox DockPanel.Dock="Top" Text="{Binding ProjectUrls[0]}" Margin="0 5"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ProjectUrls[0]}" Margin="0 5"/>
                                     <TextBlock DockPanel.Dock="Top" Text="Base URL 2"/>
-                                    <TextBox DockPanel.Dock="Top" Text="{Binding ProjectUrls[1]}" Margin="0 5"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ProjectUrls[1]}" Margin="0 5"/>
                                     <TextBlock DockPanel.Dock="Top" Text="Base URL 3"/>
-                                    <TextBox DockPanel.Dock="Top" Text="{Binding ProjectUrls[2]}" Margin="0 5"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ProjectUrls[2]}" Margin="0 5"/>
                                 </DockPanel>
                             </Grid>
                             <Grid Column="2" Row="0">
                                 <DockPanel LastChildFill="True" Margin="10">
                                     <TextBlock DockPanel.Dock="Top" Text="Description"/>
-                                    <TextBox DockPanel.Dock="Top" Margin="0 5 0 0" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.Description}" Margin="0 5 0 5" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"/>
                                 </DockPanel>
                             </Grid>
                         </Grid>
@@ -119,18 +121,16 @@
             <Grid Column="0">
                 <DockPanel DockPanel.Dock="Top" >
                     <DockPanel LastChildFill="True">
-                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="#FFC7F5FF">
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Height="35" Background="{StaticResource HeaderColor}">
                             <TextBlock Text="Available Routes" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                            <Button Command="{Binding CreateRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
-                            <Button Command="{Binding DeleteRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome TrashSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                            <Button Command="{Binding CreateRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                            <Button Command="{Binding DeleteRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome TrashSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                         </StackPanel>
-                        <ListView ItemsSource="{Binding RESTCallProject.Items}" SelectedItem="{Binding RESTCallItem}" x:Name="RouteList">
+                        <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
+                        <ListView ItemsSource="{Binding RESTCallProject.Items}" SelectedItem="{Binding RESTCallItem}" x:Name="RouteList" BorderBrush="White">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
-                                        <Grid.Style>
-                                            <Border ></Border>
-                                        </Grid.Style>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="70"/>
                                             <ColumnDefinition Width="*"/>
@@ -140,7 +140,7 @@
                                             <TextBlock Text="{Binding HttpVerb}" Margin="5"/>
                                         </Grid>
                                         <Grid Column="1">
-                                            <TextBlock Text="{Binding Route}" HorizontalAlignment="Center" Margin="5"/>
+                                            <TextBlock Text="{Binding Route}" VerticalAlignment="Center" Margin="5"/>
                                         </Grid>
                                     </Grid>
                                 </DataTemplate>
@@ -154,10 +154,10 @@
                 <DockPanel DockPanel.Dock="Top" >
                     <DockPanel LastChildFill="True">
                         <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="White">
-                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="#FFC7F5FF">
+                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="{StaticResource HeaderColor}" Height="35">
                                 <TextBlock Text="Route Settings" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                                <Button Command="{Binding SaveRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SaveSolid, Height=13, Width=13}" Margin="3 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                             </StackPanel>
+                            <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
                             <Grid DockPanel.Dock="Top" Margin="10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" MinWidth="100"/>
@@ -192,10 +192,12 @@
                             </Grid.ColumnDefinitions>
                             <Grid Column="0" Background="BlanchedAlmond">
                                 <DockPanel LastChildFill="True">
-                                    <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="#FFC7F5FF">
+                                    <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="{StaticResource HeaderColor}" Height="35">
                                         <TextBlock DockPanel.Dock="Left" Text="Send Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                                        <Button Command="{Binding SendMessageCommand}" DockPanel.Dock="Right" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome PlaySolid, Height=13, Width=13}" Margin="7 0" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                                        <Button Command="{Binding SendMessageCommand}" DockPanel.Dock="Right" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome PlaySolid, Height=13, Width=13}" Margin="7 3
+                                                " Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
                                     </DockPanel>
+                                    <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
                                     <!--<TextBox Text="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"/>-->
                                     <avalonedit:TextEditor SyntaxHighlighting="JSON" x:Name="editorSendMessage">
                                         <i:Interaction.Behaviors>
@@ -207,9 +209,10 @@
                             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
                             <Grid Column="2" Background="DarkGray">
                                 <DockPanel LastChildFill="True">
-                                    <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="#FFC7F5FF">
+                                    <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="{StaticResource HeaderColor}" Height="35">
                                         <TextBlock DockPanel.Dock="Left" Text="Receive Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
                                     </DockPanel>
+                                    <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
                                     <avalonedit:TextEditor SyntaxHighlighting="JSON" x:Name="editorReceiveMessage">
                                         <i:Interaction.Behaviors>
                                             <local:AvalonEditBehaviour GiveMeTheText="{Binding ReceiveMessage}"/>

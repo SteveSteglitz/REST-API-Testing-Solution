@@ -39,5 +39,13 @@ namespace RestApiTestSolution.Model
             var jsonData = JsonConvert.SerializeObject(restCall);
             System.IO.File.WriteAllText($"{path}\\{restCall.Project}.json", jsonData);
         }
+
+        public void DeleteRestCallFile(string path)
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
     }
 }

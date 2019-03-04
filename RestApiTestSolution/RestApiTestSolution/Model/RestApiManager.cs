@@ -32,6 +32,11 @@ namespace RestApiTestSolution.Model
             return _repository.ReadRestCallFile(path, projectName);
         }
 
+        public void RemoveProject(string path, RestApiCall restApiCall)
+        {
+            _repository.DeleteRestCallFile($"{path}\\{restApiCall.Project}.json");
+        }
+
         public async Task<string> SendHttpRequest(string accessToken, string baseUrl, RestApiCall restApiCallProject, RestApiCallItem restApiCallItem,
             CancellationToken cancellationToken)
         {

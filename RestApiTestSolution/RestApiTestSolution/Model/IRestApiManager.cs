@@ -15,6 +15,8 @@ namespace RestApiTestSolution.Model
 
         RestApiCall LoadProject(string path, string projectName);
 
+        void RemoveProject(string path, RestApiCall restApiCall);
+
         Task<string> SendHttpRequest(string accessToken, string baseUrl, RestApiCall restApiCallProject, RestApiCallItem restApiCallItem,
             CancellationToken cancellationToken);
     }

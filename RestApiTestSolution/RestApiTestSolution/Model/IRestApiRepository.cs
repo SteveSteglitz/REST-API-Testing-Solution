@@ -13,5 +13,7 @@ namespace RestApiTestSolution.Model
         RestApiCall ReadRestCallFile(string path, string projectName);
 
         void WriteRestCallFile(string path, RestApiCall restCall);
+
+        void DeleteRestCallFile(string path);
     }
 }
