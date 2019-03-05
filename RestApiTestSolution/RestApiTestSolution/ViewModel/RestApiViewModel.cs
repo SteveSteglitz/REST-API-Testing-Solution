@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Input;
-using System.Windows.Navigation;
 using Newtonsoft.Json.Linq;
 using RestApiTestSolution.Model;
 
@@ -19,7 +18,6 @@ namespace RestApiTestSolution.ViewModel
         private RestApiCall _restCallProject;
         private string _receiveMessage;
         private string _selectedProjectUrl;
-        private ObservableCollection<RestApiCallItem> _restCallItems;
         private string _selectedProjectName;
 
         public RestApiViewModel()
@@ -210,7 +208,7 @@ namespace RestApiTestSolution.ViewModel
             }
         }
 
-        public void LoadProject(string projectName)
+        private void LoadProject(string projectName)
         {
             RESTCallProject = _manager.LoadProject(SubFolder, projectName);
             RESTCallItem = RESTCallProject.Items.FirstOrDefault();
