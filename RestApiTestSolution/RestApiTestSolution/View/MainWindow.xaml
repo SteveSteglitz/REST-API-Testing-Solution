@@ -11,6 +11,7 @@
         xmlns:scintillaNet="clr-namespace:ScintillaNET;assembly=ScintillaNET"
                  xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
                  xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                 xmlns:gif="http://wpfanimatedgif.codeplex.com"
                  mc:Ignorable="d"
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
@@ -223,6 +224,7 @@
                             <Border Grid.Column="2" DockPanel.Dock="Top" BorderThickness="1" Background="#B2575050" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Grid>
                                     <TextBlock Margin="0" TextWrapping="Wrap" Text="Please Wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#7EFFFFFF"/>
+                                    <Image gif:ImageBehavior.AnimatedSource="wait.gif" />
                                 </Grid>
                             </Border>
                         </Grid>
