@@ -207,7 +207,7 @@
                                 </DockPanel>
                             </Grid>
                             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
-                            <Grid Column="2" Background="DarkGray" Visibility="{Binding IsNotBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Grid Column="2" Background="DarkGray">
                                 <DockPanel LastChildFill="True">
                                     <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="{StaticResource HeaderColor}" Height="35">
                                         <TextBlock DockPanel.Dock="Left" Text="Receive Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
@@ -220,19 +220,11 @@
                                     </avalonedit:TextEditor>
                                 </DockPanel>
                             </Grid>
-                            <Grid Column="2" Background="DarkGray" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <DockPanel LastChildFill="True">
-                                    <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="{StaticResource HeaderColor}" Height="35">
-                                        <TextBlock DockPanel.Dock="Left" Text="Receive Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                                    </DockPanel>
-                                    <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
-                                    <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" Background="#80000000">
-                                        <Grid>
-                                            <TextBlock Margin="0" TextWrapping="Wrap" Text="Please Wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#7EFFFFFF"/>
-                                        </Grid>
-                                    </Border>
-                                </DockPanel>
-                            </Grid>
+                            <Border Grid.Column="2" DockPanel.Dock="Top" BorderThickness="1" Background="#B2575050" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Grid>
+                                    <TextBlock Margin="0" TextWrapping="Wrap" Text="Please Wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#7EFFFFFF"/>
+                                </Grid>
+                            </Border>
                         </Grid>
                     </DockPanel>
                 </DockPanel>

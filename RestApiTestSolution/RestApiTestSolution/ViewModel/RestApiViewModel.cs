@@ -43,7 +43,6 @@ namespace RestApiTestSolution.ViewModel
             IsProjectDeleteFieldEnable = true;
             IsProjectNewFieldEnable = true;
             IsProjectSaveFieldEnable = false;
-            IsNotBusy = true;
             IsBusy = false;
         }
 
@@ -158,18 +157,6 @@ namespace RestApiTestSolution.ViewModel
             {
                 _isBusy = value; 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(IsNotBusy));
-            }
-        }
-
-        public bool IsNotBusy
-        {
-            get => !_isBusy;
-            set
-            {
-                _isBusy = !value; 
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(IsBusy));
             }
         }
 
