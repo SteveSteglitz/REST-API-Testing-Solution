@@ -19,6 +19,7 @@ namespace RestApiTestSolution.ViewModel
         private string _receiveMessage;
         private string _selectedProjectUrl;
         private string _selectedProjectName;
+        private bool _isBusy;
 
         public RestApiViewModel()
         {
@@ -42,6 +43,8 @@ namespace RestApiTestSolution.ViewModel
             IsProjectDeleteFieldEnable = true;
             IsProjectNewFieldEnable = true;
             IsProjectSaveFieldEnable = false;
+            IsNotBusy = true;
+            IsBusy = false;
         }
 
 
@@ -148,6 +151,28 @@ namespace RestApiTestSolution.ViewModel
             }
         }
 
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set
+            {
+                _isBusy = value; 
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsNotBusy));
+            }
+        }
+
+        public bool IsNotBusy
+        {
+            get => !_isBusy;
+            set
+            {
+                _isBusy = !value; 
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsBusy));
+            }
+        }
+
         #region Visual State Properties
         public bool IsProjectNewFieldEnable { get; set; }
 
@@ -240,6 +265,7 @@ namespace RestApiTestSolution.ViewModel
         {
             try
             {
+                IsBusy = true;
                 var responseMessage = await _manager.SendHttpRequest(AccessToken, SelectedProjectUrl, RESTCallProject,
                     RESTCallItem, CancellationToken.None);
                 ReceiveMessage = responseMessage;
@@ -265,6 +291,10 @@ namespace RestApiTestSolution.ViewModel
                 }
 
                 ReceiveMessage = sb.ToString();
+            }
+            finally
+            {
+                IsBusy = false;
             }
 
         }

@@ -18,7 +18,7 @@
         Title="REST API Test Solution" Height="850" Width="1200"
         d:DataContext="{d:DesignInstance viewModel:RestApiViewModel, IsDesignTimeCreatable=True}">
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey"/>
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey"/>
         <viewModel:HttpMethodColorConverter x:Key="HttpMethodColorConverter"/>
         <SolidColorBrush x:Key="HeaderColor" Color="#FFC7F5FF"/>
         <SolidColorBrush x:Key="HeaderLineColor" Color="#FF8FD9EA"/>
@@ -35,7 +35,7 @@
                     <Button DockPanel.Dock="Right" Command="{Binding ShowProjectsCommand}" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleUpSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28" />
                 </DockPanel>
                 <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
-                <Grid Background="White" Height="175" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}">
+                <Grid Background="White" Height="175" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}, ConverterParameter=False}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="10*"/>
@@ -207,17 +207,30 @@
                                 </DockPanel>
                             </Grid>
                             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
-                            <Grid Column="2" Background="DarkGray">
+                            <Grid Column="2" Background="DarkGray" Visibility="{Binding IsNotBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <DockPanel LastChildFill="True">
                                     <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="{StaticResource HeaderColor}" Height="35">
                                         <TextBlock DockPanel.Dock="Left" Text="Receive Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
                                     </DockPanel>
                                     <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
-                                    <avalonedit:TextEditor SyntaxHighlighting="JSON" x:Name="editorReceiveMessage">
+                                    <avalonedit:TextEditor DockPanel.Dock="Top" SyntaxHighlighting="JSON" x:Name="editorReceiveMessage">
                                         <i:Interaction.Behaviors>
                                             <local:AvalonEditBehaviour GiveMeTheText="{Binding ReceiveMessage}"/>
                                         </i:Interaction.Behaviors>
                                     </avalonedit:TextEditor>
+                                </DockPanel>
+                            </Grid>
+                            <Grid Column="2" Background="DarkGray" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <DockPanel LastChildFill="True">
+                                    <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="{StaticResource HeaderColor}" Height="35">
+                                        <TextBlock DockPanel.Dock="Left" Text="Receive Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                                    </DockPanel>
+                                    <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
+                                    <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" Background="#80000000">
+                                        <Grid>
+                                            <TextBlock Margin="0" TextWrapping="Wrap" Text="Please Wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#7EFFFFFF"/>
+                                        </Grid>
+                                    </Border>
                                 </DockPanel>
                             </Grid>
                         </Grid>
