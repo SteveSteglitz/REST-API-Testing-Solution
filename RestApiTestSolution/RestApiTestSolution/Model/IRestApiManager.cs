@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +18,6 @@ namespace RestApiTestSolution.Model
 
         void RemoveProject(string path, RestApiCall restApiCall);
 
-        Task<string> SendHttpRequest(string accessToken, string baseUrl, RestApiCall restApiCallProject, RestApiCallItem restApiCallItem,
-            CancellationToken cancellationToken);
+        Task<HttpResponseMessage> SendHttpRequest(string accessToken, string baseUrl, RestApiCall restApiCallProject, RestApiCallItem restApiCallItem, CancellationToken cancellationToken);
     }
 }

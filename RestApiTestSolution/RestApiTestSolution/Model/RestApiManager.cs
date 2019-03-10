@@ -37,7 +37,7 @@ namespace RestApiTestSolution.Model
             _repository.DeleteRestCallFile($"{path}\\{restApiCall.Project}.json");
         }
 
-        public async Task<string> SendHttpRequest(string accessToken, string baseUrl, RestApiCall restApiCallProject, RestApiCallItem restApiCallItem,
+        public async Task<HttpResponseMessage> SendHttpRequest(string accessToken, string baseUrl, RestApiCall restApiCallProject, RestApiCallItem restApiCallItem,
             CancellationToken cancellationToken)
         {
             ServicePointManager.ServerCertificateValidationCallback = (message, cert, chain, errors) => true;
@@ -59,17 +59,21 @@ namespace RestApiTestSolution.Model
                     HttpResponseMessage response = await client.GetAsync($"slmobileApi/{restApiCallItem.Route}");
                     if (response.IsSuccessStatusCode)
                     {
-                        var responseString = await response.Content.ReadAsStringAsync();
-                        return responseString;
+                        return response;
                     }
                 }else if (restApiCallItem.HttpVerb == "POST")
                 {
                     HttpResponseMessage response = await client.PostAsync($"slmobileApi/{restApiCallItem.Route}", CreateHttpContent(restApiCallItem.Body));
-                    return await response.Content.ReadAsStringAsync();
+                    return response;
+                }else if (restApiCallItem.HttpVerb == "PUT")
+                {
+                    HttpResponseMessage response = await client.PutAsync($"slmobileApi/{restApiCallItem.Route}", CreateHttpContent(restApiCallItem.Body));
+                    return response;
                 }
             }
 
-            return String.Empty;
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            //return String.Empty;
 
         }
 

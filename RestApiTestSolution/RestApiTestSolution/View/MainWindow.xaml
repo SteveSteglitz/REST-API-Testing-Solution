@@ -212,6 +212,8 @@
                                 <DockPanel LastChildFill="True">
                                     <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="{StaticResource HeaderColor}" Height="35">
                                         <TextBlock DockPanel.Dock="Left" Text="Receive Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                                        <TextBlock DockPanel.Dock="Right" Text="{Binding ReceiveMessageStatusCode}" Margin="5 10"/>
+                                        <TextBlock DockPanel.Dock="Right" Text="StatusCode " Margin="5 10"/>
                                     </DockPanel>
                                     <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
                                     <avalonedit:TextEditor DockPanel.Dock="Top" SyntaxHighlighting="JSON" x:Name="editorReceiveMessage">
@@ -223,9 +225,23 @@
                             </Grid>
                             <Border Grid.Column="2" DockPanel.Dock="Top" BorderThickness="1" Background="#B2575050" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Grid>
-                                    <TextBlock Margin="0" TextWrapping="Wrap" Text="Please Wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#7EFFFFFF"/>
-                                    <Image gif:ImageBehavior.AnimatedSource="wait.gif" />
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*" MinWidth="50"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*" MinHeight="200"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Vertical">
+                                        <Image gif:ImageBehavior.AnimatedSource="/View/wait.gif"/>
+                                        <TextBlock Margin="0"  Height="50" TextWrapping="Wrap" Text="Please Wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18
+                                                   " FontWeight="Bold" Foreground="#7EFFFFFF"/>
+                                    </StackPanel>
                                 </Grid>
+                                
                             </Border>
                         </Grid>
                     </DockPanel>

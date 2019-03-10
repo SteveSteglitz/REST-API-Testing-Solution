@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Windows.Input;
@@ -20,6 +21,7 @@ namespace RestApiTestSolution.ViewModel
         private string _selectedProjectUrl;
         private string _selectedProjectName;
         private bool _isBusy;
+        private string _receiveMessageStatusCode;
 
         public RestApiViewModel()
         {
@@ -64,7 +66,7 @@ namespace RestApiTestSolution.ViewModel
         #endregion
 
         #region Properties
-        public IEnumerable<string> HttpVerbsEnumValues => new List<string> { "GET", "POST" };
+        public IEnumerable<string> HttpVerbsEnumValues => new List<string> { "GET", "POST", "PUT", "DELETE" };
 
         public ObservableCollection<string> AllProjectNames { get; set; }
 
@@ -124,6 +126,16 @@ namespace RestApiTestSolution.ViewModel
             set
             {
                 _receiveMessage = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ReceiveMessageStatusCode
+        {
+            get => _receiveMessageStatusCode;
+            set
+            {
+                _receiveMessageStatusCode = value; 
                 OnPropertyChanged();
             }
         }
@@ -255,8 +267,9 @@ namespace RestApiTestSolution.ViewModel
                 IsBusy = true;
                 var responseMessage = await _manager.SendHttpRequest(AccessToken, SelectedProjectUrl, RESTCallProject,
                     RESTCallItem, CancellationToken.None);
-                ReceiveMessage = responseMessage;
-                if (!string.IsNullOrEmpty(ReceiveMessage) && responseMessage.Contains("AccessToken"))
+                ReceiveMessage = responseMessage.Content?.ReadAsStringAsync().Result;
+                ReceiveMessageStatusCode = $"{responseMessage.StatusCode.ToString()} ({(int)Enum.Parse(typeof(HttpStatusCode), responseMessage.StatusCode.ToString())})";
+                if (!string.IsNullOrEmpty(ReceiveMessage) && ReceiveMessage.Contains("AccessToken"))
                 {
                     dynamic d = JObject.Parse(ReceiveMessage);
                     if (d.AccessToken != null)

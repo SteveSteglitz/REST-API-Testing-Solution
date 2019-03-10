@@ -161,7 +161,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="wait.gif" />
+    <Resource Include="View\wait.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -15,7 +15,7 @@ namespace RestApiTestSolution.Model
 
         public string HttpVerb
         {
-            get { return _httpVerb; }
+            get => _httpVerb;
             set
             {
                 _httpVerb = value; 
@@ -25,7 +25,7 @@ namespace RestApiTestSolution.Model
 
         public string Route
         {
-            get { return _route; }
+            get => _route ?? String.Empty;
             set
             {
                 _route = value; 
@@ -35,7 +35,7 @@ namespace RestApiTestSolution.Model
 
         public string Body
         {
-            get { return _body; }
+            get => _body ?? String.Empty;
             set
             {
                 _body = value; 
