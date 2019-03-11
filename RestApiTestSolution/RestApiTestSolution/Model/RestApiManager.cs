@@ -70,6 +70,11 @@ namespace RestApiTestSolution.Model
                     HttpResponseMessage response = await client.PutAsync($"slmobileApi/{restApiCallItem.Route}", CreateHttpContent(restApiCallItem.Body));
                     return response;
                 }
+                else if (restApiCallItem.HttpVerb == "DELETE")
+                {
+                    HttpResponseMessage response = await client.DeleteAsync($"slmobileApi/{restApiCallItem.Route}");
+                    return response;
+                }
             }
 
             return new HttpResponseMessage(HttpStatusCode.BadRequest);
