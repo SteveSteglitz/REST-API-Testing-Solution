@@ -43,7 +43,6 @@ namespace RestApiTestSolution.Model
             ServicePointManager.ServerCertificateValidationCallback = (message, cert, chain, errors) => true;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(baseUrl);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -56,23 +55,23 @@ namespace RestApiTestSolution.Model
 
                 if (restApiCallItem.HttpVerb == "GET")
                 {
-                    HttpResponseMessage response = await client.GetAsync($"slmobileApi/{restApiCallItem.Route}");
+                    HttpResponseMessage response = await client.GetAsync($"{baseUrl}/{restApiCallItem.Route}");
                     if (response.IsSuccessStatusCode)
                     {
                         return response;
                     }
                 }else if (restApiCallItem.HttpVerb == "POST")
                 {
-                    HttpResponseMessage response = await client.PostAsync($"slmobileApi/{restApiCallItem.Route}", CreateHttpContent(restApiCallItem.Body));
+                    HttpResponseMessage response = await client.PostAsync($"{baseUrl}/{restApiCallItem.Route}", CreateHttpContent(restApiCallItem.Body));
                     return response;
                 }else if (restApiCallItem.HttpVerb == "PUT")
                 {
-                    HttpResponseMessage response = await client.PutAsync($"slmobileApi/{restApiCallItem.Route}", CreateHttpContent(restApiCallItem.Body));
+                    HttpResponseMessage response = await client.PutAsync($"{baseUrl}/{restApiCallItem.Route}", CreateHttpContent(restApiCallItem.Body));
                     return response;
                 }
                 else if (restApiCallItem.HttpVerb == "DELETE")
                 {
-                    HttpResponseMessage response = await client.DeleteAsync($"slmobileApi/{restApiCallItem.Route}");
+                    HttpResponseMessage response = await client.DeleteAsync($"{baseUrl}/{restApiCallItem.Route}");
                     return response;
                 }
             }
