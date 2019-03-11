@@ -1,0 +1,253 @@
+﻿<mah:MetroWindow x:Class="RestApiTestSolution.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RestApiTestSolution.View"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"         
+        xmlns:viewModel="clr-namespace:RestApiTestSolution.ViewModel"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:scintillaNet="clr-namespace:ScintillaNET;assembly=ScintillaNET"
+                 xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+                 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                 xmlns:gif="http://wpfanimatedgif.codeplex.com"
+                 mc:Ignorable="d"
+        BorderBrush="{DynamicResource AccentColorBrush}"
+        BorderThickness="1"
+        WindowStartupLocation="CenterScreen"
+        Title="REST API Test Solution" Height="850" Width="1200"
+        d:DataContext="{d:DesignInstance viewModel:RestApiViewModel, IsDesignTimeCreatable=True}">
+    <Window.Resources>
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey"/>
+        <viewModel:HttpMethodColorConverter x:Key="HttpMethodColorConverter"/>
+        <SolidColorBrush x:Key="HeaderColor" Color="#FFC7F5FF"/>
+        <SolidColorBrush x:Key="HeaderLineColor" Color="#FF8FD9EA"/>
+    </Window.Resources>
+    <DockPanel Background="LightGray">
+        <DockPanel DockPanel.Dock="Top" DataContext="{Binding}" Margin="0 0 0 5">
+            <DockPanel LastChildFill="True">
+                <DockPanel DockPanel.Dock="Top" Background="{StaticResource HeaderColor}" LastChildFill="False" Height="35">
+                    <TextBlock Text="Project Settings" Margin="5 5 15 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                    <Button DockPanel.Dock="Left" Command="{Binding NewProjectCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                    <Button DockPanel.Dock="Left" Command="{Binding SaveProjectCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SaveSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                    <Button DockPanel.Dock="Left" Command="{Binding DeleteProjectCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome TrashSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                    <Button DockPanel.Dock="Right" Command="{Binding ShowProjectsCommand}" Visibility="{Binding ProjectsIsNotVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleDownSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28" />
+                    <Button DockPanel.Dock="Right" Command="{Binding ShowProjectsCommand}" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleUpSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28" />
+                </DockPanel>
+                <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
+                <Grid Background="White" Height="175" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}, ConverterParameter=False}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="10*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Column="0" Row="0">
+                        <DockPanel LastChildFill="True" Margin="10">
+                            <TextBlock DockPanel.Dock="Top" Text="Available Projects" Margin="0 0 0 5"/>
+                            <ListView DockPanel.Dock="Top" ItemsSource="{Binding AllProjectNames}" SelectedItem="{Binding SelectedProjectName}" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+                        </DockPanel>
+                    </Grid>
+                    <Grid Column="1" Row="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" MinWidth="300"/>
+                                <ColumnDefinition Width="4*" MinWidth="450"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Column="0" Row="0">
+                                <DockPanel LastChildFill="False" Margin="10">
+                                    <TextBlock DockPanel.Dock="Top" Text="Project Name"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.Project, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0 5"/>
+                                    <TextBlock DockPanel.Dock="Top" Text="Content-Type"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ContentType}" Margin="0 5"/>
+                                    <Grid DockPanel.Dock="Top">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="5"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Column="0">
+                                            <DockPanel>
+                                                <TextBlock DockPanel.Dock="Top" Text="Authorization-Scheme"/>
+                                                <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.AuthorizationScheme}" Margin="0 5 0 0"/>
+                                            </DockPanel>
+                                        </Grid>
+                                        <Grid Column="2">
+                                            <DockPanel>
+                                                <TextBlock DockPanel.Dock="Top" Text="Authorization-Parameter"/>
+                                                <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.AuthorizationParameter}" Margin="0 5 0 0"/>
+                                            </DockPanel>
+                                        </Grid>
+                                    </Grid>
+                                </DockPanel>
+                            </Grid>
+                            <Grid Column="1" Row="0">
+                                <DockPanel LastChildFill="True" Margin="10">
+                                    <DockPanel DockPanel.Dock="Top">
+                                        <TextBlock DockPanel.Dock="Left" Text="Base URL 1"/>
+                                    </DockPanel>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ProjectUrls[0]}" Margin="0 5"/>
+                                    <TextBlock DockPanel.Dock="Top" Text="Base URL 2"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ProjectUrls[1]}" Margin="0 5"/>
+                                    <TextBlock DockPanel.Dock="Top" Text="Base URL 3"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ProjectUrls[2]}" Margin="0 5"/>
+                                </DockPanel>
+                            </Grid>
+                            <Grid Column="2" Row="0">
+                                <DockPanel LastChildFill="True" Margin="10">
+                                    <TextBlock DockPanel.Dock="Top" Text="Description"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.Description}" Margin="0 5 0 5" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"/>
+                                </DockPanel>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </DockPanel>
+        </DockPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Column="0">
+                <DockPanel DockPanel.Dock="Top" >
+                    <DockPanel LastChildFill="True">
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Height="35" Background="{StaticResource HeaderColor}">
+                            <TextBlock Text="Available Routes" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                            <Button Command="{Binding CreateRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                            <Button Command="{Binding DeleteRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome TrashSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                        </StackPanel>
+                        <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
+                        <ListView ItemsSource="{Binding RESTCallProject.Items}" SelectedItem="{Binding RESTCallItem}" x:Name="RouteList" BorderBrush="White">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Column="0">
+                                            <Rectangle Fill="{Binding HttpVerb, Converter={StaticResource HttpMethodColorConverter}}"/>
+                                            <TextBlock Text="{Binding HttpVerb}" Margin="5"/>
+                                        </Grid>
+                                        <Grid Column="1">
+                                            <TextBlock Text="{Binding Route}" VerticalAlignment="Center" Margin="5"/>
+                                        </Grid>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </DockPanel>
+                </DockPanel>
+            </Grid>
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+            <Grid Column="2">
+                <DockPanel DockPanel.Dock="Top" >
+                    <DockPanel LastChildFill="True">
+                        <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="White">
+                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="{StaticResource HeaderColor}" Height="35">
+                                <TextBlock Text="Route Settings" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                            </StackPanel>
+                            <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
+                            <Grid DockPanel.Dock="Top" Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" MinWidth="100"/>
+                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="4*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Column="0">
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Top" Text="Http Method" Margin=" 0 0 0 5"/>
+                                        <ComboBox  ItemsSource="{Binding HttpVerbsEnumValues}" SelectedItem="{Binding RESTCallItem.HttpVerb}"></ComboBox>
+                                    </DockPanel>
+                                </Grid>
+                                <Grid Column="1">
+                                    <DockPanel Margin="10 0">
+                                        <TextBlock DockPanel.Dock="Top" Text="Base URL" Margin=" 0 0 0 5"/>
+                                        <ComboBox ItemsSource="{Binding ProjectUrls}" SelectedItem="{Binding SelectedProjectUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding RESTCallProject.BaseUrl}"/>
+                                    </DockPanel>
+                                </Grid>
+                                <Grid Column="2">
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Top" Text="Route" Margin=" 0 0 0 5"/>
+                                        <TextBox Text="{Binding RESTCallItem.Route}"/>
+                                    </DockPanel>
+                                </Grid>
+                            </Grid>
+                        </DockPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Column="0" Background="BlanchedAlmond">
+                                <DockPanel LastChildFill="True">
+                                    <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="{StaticResource HeaderColor}" Height="35">
+                                        <TextBlock DockPanel.Dock="Left" Text="Send Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                                        <Button Command="{Binding SendMessageCommand}" DockPanel.Dock="Right" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome PlaySolid, Height=13, Width=13}" Margin="7 3
+                                                " Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                                    </DockPanel>
+                                    <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
+                                    <!--<TextBox Text="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"/>-->
+                                    <avalonedit:TextEditor SyntaxHighlighting="JSON" x:Name="editorSendMessage">
+                                        <i:Interaction.Behaviors>
+                                            <local:AvalonEditBehaviour GiveMeTheText="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </i:Interaction.Behaviors>
+                                    </avalonedit:TextEditor>
+                                </DockPanel>
+                            </Grid>
+                            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+                            <Grid Column="2" Background="DarkGray">
+                                <DockPanel LastChildFill="True">
+                                    <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="{StaticResource HeaderColor}" Height="35">
+                                        <TextBlock DockPanel.Dock="Left" Text="Receive Message" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                                        <TextBlock DockPanel.Dock="Right" Text="{Binding ReceiveMessageStatusCode}" Margin="5 10"/>
+                                        <TextBlock DockPanel.Dock="Right" Text="StatusCode " Margin="5 10"/>
+                                    </DockPanel>
+                                    <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
+                                    <avalonedit:TextEditor DockPanel.Dock="Top" SyntaxHighlighting="JSON" x:Name="editorReceiveMessage">
+                                        <i:Interaction.Behaviors>
+                                            <local:AvalonEditBehaviour GiveMeTheText="{Binding ReceiveMessage}"/>
+                                        </i:Interaction.Behaviors>
+                                    </avalonedit:TextEditor>
+                                </DockPanel>
+                            </Grid>
+                            <Border Grid.Column="2" DockPanel.Dock="Top" BorderThickness="1" Background="#B2575050" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*" MinWidth="50"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*" MinHeight="200"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Vertical">
+                                        <Image gif:ImageBehavior.AnimatedSource="/View/wait.gif"/>
+                                        <TextBlock Margin="0"  Height="50" TextWrapping="Wrap" Text="Please Wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18
+                                                   " FontWeight="Bold" Foreground="#7EFFFFFF"/>
+                                    </StackPanel>
+                                </Grid>
+                                
+                            </Border>
+                        </Grid>
+                    </DockPanel>
+                </DockPanel>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</mah:MetroWindow>
+
