@@ -9,7 +9,7 @@ using RestApiTestSolution.Model;
 
 namespace RestApiTestSolution.ViewModel
 {
-    public static class ObservableollectionExtention
+    public static class ObservableCollectionExtention
     {
         public static void SwapItems(this ObservableCollection<RestApiCallItem> items, int indexA, int indexB)
         {
