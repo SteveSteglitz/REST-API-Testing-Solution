@@ -37,6 +37,8 @@ namespace RestApiTestSolution.ViewModel
             NewProjectCommand = new RelayCommand(NewProjectCommandExecute, o => true);
             SaveProjectCommand = new RelayCommand(SaveProjectCommandExecute, o => RESTCallItem != null || RESTCallProject != null);
             DeleteProjectCommand = new RelayCommand(DeleteProjectCommandExecute, o => RESTCallProject != null);
+            MoveRouteItemDownCommand = new RelayCommand(MoveRouteItemDownCommandExecute, o => RESTCallItem != null);
+            MoveRouteItemUpCommand = new RelayCommand(MoveRouteItemUpCommandExecute, o => RESTCallItem != null);
             AllProjectNames = new ObservableCollection<string>();
             ProjectUrls = new ObservableCollection<string>();
             SubFolder = "Projects";
@@ -47,8 +49,7 @@ namespace RestApiTestSolution.ViewModel
             IsProjectSaveFieldEnable = false;
             IsBusy = false;
         }
-
-
+        
         #region Commands
         public ICommand ShowProjectsCommand { get; set; }
 
@@ -63,6 +64,10 @@ namespace RestApiTestSolution.ViewModel
         public ICommand SaveProjectCommand { get; set; }
 
         public ICommand DeleteProjectCommand { get; set; }
+
+        public ICommand MoveRouteItemDownCommand { get; set; }
+
+        public ICommand MoveRouteItemUpCommand { get; set; }
         #endregion
 
         #region Properties
@@ -221,6 +226,27 @@ namespace RestApiTestSolution.ViewModel
             
             _manager.SaveProject(SubFolder, RESTCallProject);
             GetAllProjectNames();
+        }
+
+        private void MoveRouteItemUpCommandExecute(object obj)
+        {
+            var indexA = RESTCallProject.Items.IndexOf(RESTCallItem);
+            if (indexA > 1)
+            {
+                RESTCallProject.Items.SwapItems(indexA - 1, indexA);
+            }
+
+            RESTCallItem = RESTCallProject.Items[indexA - 1];
+        }
+
+        private void MoveRouteItemDownCommandExecute(object obj)
+        {
+            var indexA = RESTCallProject.Items.IndexOf(RESTCallItem);
+            if (indexA < RESTCallProject.Items.Count)
+            {
+                RESTCallProject.Items.SwapItems(indexA, indexA+1);
+            }
+            RESTCallItem = RESTCallProject.Items[indexA + 1];
         }
 
         private void GetAllProjectNames()

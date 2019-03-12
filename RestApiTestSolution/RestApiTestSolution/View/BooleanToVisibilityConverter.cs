@@ -29,7 +29,7 @@ namespace RestApiTestSolution.View
                 }
                 return (bValue) ? Visibility.Visible : Visibility.Collapsed;
             }
-            catch (InvalidCastException e)
+            catch (InvalidCastException)
             {
                 return Visibility.Collapsed;
             }

@@ -122,11 +122,13 @@
             <Grid Column="0">
                 <DockPanel DockPanel.Dock="Top" >
                     <DockPanel LastChildFill="True">
-                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Height="35" Background="{StaticResource HeaderColor}">
-                            <TextBlock Text="Available Routes" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                            <Button Command="{Binding CreateRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
-                            <Button Command="{Binding DeleteRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome TrashSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
-                        </StackPanel>
+                        <DockPanel LastChildFill="False" DockPanel.Dock="Top" Height="35" Background="{StaticResource HeaderColor}">
+                            <TextBlock DockPanel.Dock="Left" Text="Available Routes" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                            <Button DockPanel.Dock="Left" Command="{Binding CreateRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                            <Button DockPanel.Dock="Left" Command="{Binding DeleteRouteCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome TrashSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                            <Button DockPanel.Dock="Right" Command="{Binding MoveRouteItemDownCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SortDownSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                            <Button DockPanel.Dock="Right" Command="{Binding MoveRouteItemUpCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SortUpSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="Black" Width="28"/>
+                        </DockPanel>
                         <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
                         <ListView ItemsSource="{Binding RESTCallProject.Items}" SelectedItem="{Binding RESTCallItem}" x:Name="RouteList" BorderBrush="White">
                             <ListView.ItemTemplate>
