@@ -92,6 +92,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\ApiVariable.cs" />
     <Compile Include="Model\HttpVerbs.cs" />
     <Compile Include="Model\IRestApiManager.cs" />
     <Compile Include="Model\IRestApiRepository.cs" />

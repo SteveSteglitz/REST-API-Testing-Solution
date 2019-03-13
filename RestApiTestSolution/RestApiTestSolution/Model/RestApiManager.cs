@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -47,31 +49,30 @@ namespace RestApiTestSolution.Model
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 if (!string.IsNullOrEmpty(restApiCallProject.AuthorizationScheme) &&
-                        !string.IsNullOrEmpty(restApiCallProject.AuthorizationParameter) &&
-                        !string.IsNullOrEmpty(accessToken))
+                        !string.IsNullOrEmpty(restApiCallProject.AuthorizationParameter))
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(restApiCallProject.AuthorizationScheme, accessToken);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(restApiCallProject.AuthorizationScheme, restApiCallProject.GetStringReplacedWithVariable(restApiCallProject.AuthorizationParameter));
                 }
 
                 if (restApiCallItem.HttpVerb == "GET")
                 {
-                    HttpResponseMessage response = await client.GetAsync($"{baseUrl}/{restApiCallItem.Route}");
+                    HttpResponseMessage response = await client.GetAsync($"{baseUrl}/{restApiCallProject.GetStringReplacedWithVariable(restApiCallItem.Route)}");
                     if (response.IsSuccessStatusCode)
                     {
                         return response;
                     }
                 }else if (restApiCallItem.HttpVerb == "POST")
                 {
-                    HttpResponseMessage response = await client.PostAsync($"{baseUrl}/{restApiCallItem.Route}", CreateHttpContent(restApiCallItem.Body));
+                    HttpResponseMessage response = await client.PostAsync($"{baseUrl}/{restApiCallProject.GetStringReplacedWithVariable(restApiCallItem.Route)}", CreateHttpContent(restApiCallItem.Body));
                     return response;
                 }else if (restApiCallItem.HttpVerb == "PUT")
                 {
-                    HttpResponseMessage response = await client.PutAsync($"{baseUrl}/{restApiCallItem.Route}", CreateHttpContent(restApiCallItem.Body));
+                    HttpResponseMessage response = await client.PutAsync($"{baseUrl}/{restApiCallProject.GetStringReplacedWithVariable(restApiCallItem.Route)}", CreateHttpContent(restApiCallItem.Body));
                     return response;
                 }
                 else if (restApiCallItem.HttpVerb == "DELETE")
                 {
-                    HttpResponseMessage response = await client.DeleteAsync($"{baseUrl}/{restApiCallItem.Route}");
+                    HttpResponseMessage response = await client.DeleteAsync($"{baseUrl}/{restApiCallProject.GetStringReplacedWithVariable(restApiCallItem.Route)}");
                     return response;
                 }
             }

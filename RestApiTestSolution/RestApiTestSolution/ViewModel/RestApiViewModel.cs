@@ -22,6 +22,7 @@ namespace RestApiTestSolution.ViewModel
         private string _selectedProjectName;
         private bool _isBusy;
         private string _receiveMessageStatusCode;
+        private ApiVariable _selectedApiVariable;
 
         public RestApiViewModel()
         {
@@ -50,7 +51,6 @@ namespace RestApiTestSolution.ViewModel
             IsProjectNewFieldEnable = true;
             IsProjectSaveFieldEnable = false;
             IsBusy = false;
-            Variables = new ObservableCollection<Tuple<string, string>>{ new Tuple<string, string>("$Beleg", "BBE250"), new Tuple<string, string>("$Kennung", "123-1234-123-2352")};
         }
 
 
@@ -131,6 +131,16 @@ namespace RestApiTestSolution.ViewModel
             }
         }
 
+        public ApiVariable SelectedApiVariable
+        {
+            get => _selectedApiVariable;
+            set
+            {
+                _selectedApiVariable = value; 
+                OnPropertyChanged();
+            }
+        }
+
         public string SubFolder { get; set; }
 
         public string AccessToken { get; set; }
@@ -197,11 +207,12 @@ namespace RestApiTestSolution.ViewModel
         public bool IsRouteDeleteFieldEnable { get; set; }
 
 
-        public bool IsRouteSaveFieldEnable { get; set; }  
-        #endregion
-        
+        public bool IsRouteSaveFieldEnable { get; set; }
         #endregion
 
+        #endregion
+
+        #region CommandExecutes
         private void DeleteRouteCommandExecute(object obj)
         {
             RESTCallProject.Items.Remove(RESTCallItem);
@@ -219,7 +230,7 @@ namespace RestApiTestSolution.ViewModel
         {
             RESTCallProject = new RestApiCall
             {
-                ProjectUrls = new ObservableCollection<string> {"https://", "https://", "https://"}
+                ProjectUrls = new ObservableCollection<string> { "https://", "https://", "https://" }
             };
         }
 
@@ -233,7 +244,7 @@ namespace RestApiTestSolution.ViewModel
                 item.Route = RESTCallItem.Route;
                 item.Body = RESTCallItem.Body;
             }
-            
+
             _manager.SaveProject(SubFolder, RESTCallProject);
             GetAllProjectNames();
         }
@@ -254,20 +265,23 @@ namespace RestApiTestSolution.ViewModel
             var indexA = RESTCallProject.Items.IndexOf(RESTCallItem);
             if (indexA < RESTCallProject.Items.Count)
             {
-                RESTCallProject.Items.SwapItems(indexA, indexA+1);
+                RESTCallProject.Items.SwapItems(indexA, indexA + 1);
             }
             RESTCallItem = RESTCallProject.Items[indexA + 1];
         }
 
         private void CreateVariableCommandExecute(object obj)
         {
-            Variables.Add(new Tuple<string, string>("", ""));
+            SelectedApiVariable = new ApiVariable(String.Empty, String.Empty);
+            RESTCallProject.Variables.Add(SelectedApiVariable);
         }
 
         private void DeleteVariableCommandExecute(object obj)
         {
-            throw new NotImplementedException();
-        }
+            RESTCallProject.Variables.Remove(SelectedApiVariable);
+            SelectedApiVariable = RESTCallProject.Variables.FirstOrDefault();
+        } 
+        #endregion
 
         private void GetAllProjectNames()
         {
@@ -315,14 +329,7 @@ namespace RestApiTestSolution.ViewModel
                     RESTCallItem, CancellationToken.None);
                 ReceiveMessage = responseMessage.Content?.ReadAsStringAsync().Result;
                 ReceiveMessageStatusCode = $"{responseMessage.StatusCode.ToString()} ({(int)Enum.Parse(typeof(HttpStatusCode), responseMessage.StatusCode.ToString())})";
-                if (!string.IsNullOrEmpty(ReceiveMessage) && ReceiveMessage.Contains("AccessToken"))
-                {
-                    dynamic d = JObject.Parse(ReceiveMessage);
-                    if (d.AccessToken != null)
-                    {
-                        AccessToken = d.AccessToken;
-                    }
-                }
+                RESTCallProject.SaveVariableValueWhenFoundVariableName(ReceiveMessage);
             }
             catch (System.Net.Http.HttpRequestException exception)
             {
