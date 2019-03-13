@@ -39,6 +39,8 @@ namespace RestApiTestSolution.ViewModel
             DeleteProjectCommand = new RelayCommand(DeleteProjectCommandExecute, o => RESTCallProject != null);
             MoveRouteItemDownCommand = new RelayCommand(MoveRouteItemDownCommandExecute, o => RESTCallItem != null);
             MoveRouteItemUpCommand = new RelayCommand(MoveRouteItemUpCommandExecute, o => RESTCallItem != null);
+            CreateVariableCommand = new RelayCommand(CreateVariableCommandExecute);
+            DeleteVariableCommand = new RelayCommand(DeleteVariableCommandExecute);
             AllProjectNames = new ObservableCollection<string>();
             ProjectUrls = new ObservableCollection<string>();
             SubFolder = "Projects";
@@ -48,8 +50,10 @@ namespace RestApiTestSolution.ViewModel
             IsProjectNewFieldEnable = true;
             IsProjectSaveFieldEnable = false;
             IsBusy = false;
+            Variables = new ObservableCollection<Tuple<string, string>>{ new Tuple<string, string>("$Beleg", "BBE250"), new Tuple<string, string>("$Kennung", "123-1234-123-2352")};
         }
-        
+
+
         #region Commands
         public ICommand ShowProjectsCommand { get; set; }
 
@@ -68,6 +72,10 @@ namespace RestApiTestSolution.ViewModel
         public ICommand MoveRouteItemDownCommand { get; set; }
 
         public ICommand MoveRouteItemUpCommand { get; set; }
+
+        public ICommand CreateVariableCommand { get; set; }
+
+        public ICommand DeleteVariableCommand { get; set; }
         #endregion
 
         #region Properties
@@ -90,6 +98,8 @@ namespace RestApiTestSolution.ViewModel
         }
 
         public ObservableCollection<string> ProjectUrls { get; set; }
+
+        public ObservableCollection<Tuple<string, string>> Variables { get; set; }
 
         public string SelectedProjectUrl
         {
@@ -247,6 +257,16 @@ namespace RestApiTestSolution.ViewModel
                 RESTCallProject.Items.SwapItems(indexA, indexA+1);
             }
             RESTCallItem = RESTCallProject.Items[indexA + 1];
+        }
+
+        private void CreateVariableCommandExecute(object obj)
+        {
+            Variables.Add(new Tuple<string, string>("", ""));
+        }
+
+        private void DeleteVariableCommandExecute(object obj)
+        {
+            throw new NotImplementedException();
         }
 
         private void GetAllProjectNames()
