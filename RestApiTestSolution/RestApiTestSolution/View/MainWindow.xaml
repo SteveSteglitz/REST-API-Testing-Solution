@@ -38,7 +38,7 @@
                     <Button DockPanel.Dock="Right" Command="{Binding ShowProjectsCommand}" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome AngleUpSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="{StaticResource ButtonForegroundColor}" Width="28" />
                 </DockPanel>
                 <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
-                <Grid Background="White" Height="175" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}, ConverterParameter=False}">
+                <Grid Background="White" Height="180" Visibility="{Binding ProjectsIsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}, ConverterParameter=False}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="10*"/>
@@ -90,10 +90,8 @@
                                 </DockPanel>
                             </Grid>
                             <Grid Column="1" Row="0">
-                                <DockPanel LastChildFill="True" Margin="10">
-                                    <DockPanel DockPanel.Dock="Top">
-                                        <TextBlock DockPanel.Dock="Left" Text="Base URL 1"/>
-                                    </DockPanel>
+                                <DockPanel LastChildFill="False" Margin="10">
+                                    <TextBlock DockPanel.Dock="Top" Text="Base URL 1"/>
                                     <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ProjectUrls[0]}" Margin="0 5"/>
                                     <TextBlock DockPanel.Dock="Top" Text="Base URL 2"/>
                                     <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ProjectUrls[1]}" Margin="0 5"/>
@@ -102,7 +100,7 @@
                                 </DockPanel>
                             </Grid>
                             <Grid Column="2" Row="0">
-                                <DockPanel LastChildFill="True" Margin="10">
+                                <DockPanel LastChildFill="True" Margin="10 10 10 15">
                                     <TextBlock DockPanel.Dock="Top" Text="Description"/>
                                     <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.Description}" Margin="0 5 0 5" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"/>
                                 </DockPanel>
@@ -137,17 +135,17 @@
                             <Button DockPanel.Dock="Right" Command="{Binding MoveRouteItemUpCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SortUpSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="{StaticResource ButtonForegroundColor}" Width="28"/>
                         </DockPanel>
                         <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
-                        <ListView ItemsSource="{Binding RESTCallProject.Items}" SelectedItem="{Binding RESTCallItem}" x:Name="RouteList" BorderBrush="White">
+                        <ListView ItemsSource="{Binding RESTCallProject.Items}" SelectedItem="{Binding RESTCallItem}" x:Name="RouteList" BorderBrush="White"  ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid>
+                                    <Grid Margin="3">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="70"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid Column="0">
                                             <Rectangle Fill="{Binding HttpVerb, Converter={StaticResource HttpMethodColorConverter}}"/>
-                                            <TextBlock Text="{Binding HttpVerb}" Margin="5"/>
+                                            <TextBlock Text="{Binding HttpVerb}" Margin="10 5"/>
                                         </Grid>
                                         <Grid Column="1">
                                             <TextBlock Text="{Binding Route}" VerticalAlignment="Center" Margin="5"/>
@@ -158,7 +156,7 @@
                         </ListView>
                     </DockPanel>
                     <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch"/>
-                    <DockPanel Grid.Row="2">
+                    <DockPanel Grid.Row="2" LastChildFill="True">
                         <DockPanel LastChildFill="False" DockPanel.Dock="Top" Height="35" Background="{StaticResource HeaderColor}">
                             <TextBlock DockPanel.Dock="Left" Text="Variables" Margin="5 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
                             <Button DockPanel.Dock="Left" Command="{Binding CreateVariableCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome FileSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="{StaticResource ButtonForegroundColor}" Width="28"/>
@@ -169,15 +167,17 @@
                             <TextBlock DockPanel.Dock="Left" Text="Name" Width="120" Margin="10 5"/>
                             <TextBlock DockPanel.Dock="Left" Text="Value" Margin="0 5"/>
                         </DockPanel>
-                        <ListView DockPanel.Dock="Top" ItemsSource="{Binding RESTCallProject.Variables, Mode=TwoWay}" SelectedItem="{Binding SelectedApiVariable}" BorderBrush="White">
+                        <ListView DockPanel.Dock="Top" ItemsSource="{Binding RESTCallProject.Variables, Mode=TwoWay}" SelectedItem="{Binding SelectedApiVariable}" BorderBrush="White" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Vertical">
-                                        <DockPanel LastChildFill="True">
-                                            <TextBox DockPanel.Dock="Left" Text="{Binding Name}" Width="120" Margin="5"/>
-                                            <TextBox DockPanel.Dock="Left" Text="{Binding Value}" Margin="5"/>
-                                        </DockPanel>
-                                    </StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding Name}" Width="120" Margin="5"/>
+                                        <TextBox Grid.Column="1" Text="{Binding Value}" MinWidth="120" Margin="5"/>
+                                    </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
@@ -221,7 +221,7 @@
                         </DockPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="5"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
