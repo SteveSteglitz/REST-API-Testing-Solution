@@ -11,9 +11,9 @@ namespace RestApiTestSolution.ViewModel
 {
     public static class ObservableCollectionExtention
     {
-        public static void SwapItems(this ObservableCollection<RestApiCallItem> items, int indexA, int indexB)
+        public static void SwapItems(this ObservableCollection<ApiRoute> items, int indexA, int indexB)
         {
-            RestApiCallItem tmp = items[indexA];
+            ApiRoute tmp = items[indexA];
             items[indexA] = items[indexB];
             items[indexB] = tmp;
         }

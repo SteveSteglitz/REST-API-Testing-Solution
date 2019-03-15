@@ -96,23 +96,22 @@
     <Compile Include="Model\HttpVerbs.cs" />
     <Compile Include="Model\IRestApiManager.cs" />
     <Compile Include="Model\IRestApiRepository.cs" />
-    <Compile Include="Model\RestApiCall.cs" />
-    <Compile Include="Model\RestApiCallItem.cs" />
+    <Compile Include="Model\ApiProject.cs" />
+    <Compile Include="Model\ApiRoute.cs" />
     <Compile Include="Model\RestApiManager.cs" />
     <Compile Include="Model\RestApiRepository.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
-    <Compile Include="ViewModel\HttpMethodColorConverter.cs" />
+    <Compile Include="View\Converter\HttpMethodColorConverter.cs" />
     <Compile Include="ViewModel\ObservableCollectionExtention.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
-    <Compile Include="ViewModel\RelayCommandAsync.cs" />
     <Compile Include="ViewModel\RestApiViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="View\AvalonTextBehavior.cs" />
-    <Compile Include="View\BooleanToVisibilityConverter.cs" />
+    <Compile Include="View\Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -164,6 +163,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="View\wait.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="splash.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

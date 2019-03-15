@@ -12,6 +12,7 @@
                  xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
                  xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                  xmlns:gif="http://wpfanimatedgif.codeplex.com"
+                 xmlns:converter="clr-namespace:RestApiTestSolution.View.Converter"
                  mc:Ignorable="d"
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
@@ -19,8 +20,8 @@
         Title="REST API Test Solution" Height="850" Width="1200"
         d:DataContext="{d:DesignInstance viewModel:RestApiViewModel, IsDesignTimeCreatable=True}">
     <Window.Resources>
-        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey"/>
-        <viewModel:HttpMethodColorConverter x:Key="HttpMethodColorConverter"/>
+        <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey"/>
+        <converter:HttpMethodColorConverter x:Key="HttpMethodColorConverter"/>
         <SolidColorBrush x:Key="HeaderColor" Color="Khaki"/>
         <SolidColorBrush x:Key="HeaderLineColor" Color="SaddleBrown"/>
         <SolidColorBrush x:Key="ButtonForegroundColor" Color="Khaki"/>
@@ -135,7 +136,7 @@
                             <Button DockPanel.Dock="Right" Command="{Binding MoveRouteItemUpCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SortUpSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="{StaticResource ButtonForegroundColor}" Width="28"/>
                         </DockPanel>
                         <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
-                        <ListView ItemsSource="{Binding RESTCallProject.Items}" SelectedItem="{Binding RESTCallItem}" x:Name="RouteList" BorderBrush="White"  ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
+                        <ListView ItemsSource="{Binding ProjectProject.Items}" SelectedItem="{Binding Route}" x:Name="RouteList" BorderBrush="White"  ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="3">
@@ -167,7 +168,7 @@
                             <TextBlock DockPanel.Dock="Left" Text="Name" Width="120" Margin="10 5"/>
                             <TextBlock DockPanel.Dock="Left" Text="Value" Margin="0 5"/>
                         </DockPanel>
-                        <ListView DockPanel.Dock="Top" ItemsSource="{Binding RESTCallProject.Variables, Mode=TwoWay}" SelectedItem="{Binding SelectedApiVariable}" BorderBrush="White" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
+                        <ListView DockPanel.Dock="Top" ItemsSource="{Binding ProjectProject.Variables, Mode=TwoWay}" SelectedItem="{Binding SelectedApiVariable}" BorderBrush="White" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -202,19 +203,19 @@
                                 <Grid Column="0">
                                     <DockPanel>
                                         <TextBlock DockPanel.Dock="Top" Text="Http Method" Margin=" 0 0 0 5"/>
-                                        <ComboBox  ItemsSource="{Binding HttpVerbsEnumValues}" SelectedItem="{Binding RESTCallItem.HttpVerb}"></ComboBox>
+                                        <ComboBox  ItemsSource="{Binding HttpVerbsEnumValues}" SelectedItem="{Binding Route.HttpVerb}"></ComboBox>
                                     </DockPanel>
                                 </Grid>
                                 <Grid Column="1">
                                     <DockPanel Margin="10 0">
                                         <TextBlock DockPanel.Dock="Top" Text="Base URL" Margin=" 0 0 0 5"/>
-                                        <ComboBox ItemsSource="{Binding ProjectUrls}" SelectedItem="{Binding SelectedProjectUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding RESTCallProject.BaseUrl}"/>
+                                        <ComboBox ItemsSource="{Binding ProjectUrls}" SelectedItem="{Binding SelectedProjectUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding ProjectProject.BaseUrl}"/>
                                     </DockPanel>
                                 </Grid>
                                 <Grid Column="2">
                                     <DockPanel>
                                         <TextBlock DockPanel.Dock="Top" Text="Route" Margin=" 0 0 0 5"/>
-                                        <TextBox Text="{Binding RESTCallItem.Route}"/>
+                                        <TextBox Text="{Binding Route.Route}"/>
                                     </DockPanel>
                                 </Grid>
                             </Grid>
@@ -236,7 +237,7 @@
                                     <!--<TextBox Text="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"/>-->
                                     <avalonedit:TextEditor SyntaxHighlighting="JSON" x:Name="editorSendMessage">
                                         <i:Interaction.Behaviors>
-                                            <local:AvalonEditBehaviour GiveMeTheText="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <local:AvalonEditBehaviour GiveMeTheText="{Binding Route.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                         </i:Interaction.Behaviors>
                                     </avalonedit:TextEditor>
                                 </DockPanel>

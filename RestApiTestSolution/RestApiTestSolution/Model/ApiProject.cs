@@ -12,7 +12,7 @@ using RestApiTestSolution.Annotations;
 
 namespace RestApiTestSolution.Model
 {
-    public class RestApiCall
+    public class ApiProject
     {
         private ObservableCollection<ApiVariable> _variables;
         public string Project { get; set; }
@@ -27,7 +27,7 @@ namespace RestApiTestSolution.Model
 
         public string Description { get; set; }
 
-        public ObservableCollection<RestApiCallItem> Items { get; set; }
+        public ObservableCollection<ApiRoute> Items { get; set; }
 
         public ObservableCollection<ApiVariable> Variables
         {
