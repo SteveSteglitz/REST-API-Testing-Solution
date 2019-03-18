@@ -66,9 +66,9 @@
                             <Grid Column="0" Row="0">
                                 <DockPanel LastChildFill="False" Margin="10">
                                     <TextBlock DockPanel.Dock="Top" Text="Project Name"/>
-                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.Project, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0 5"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding SelectedProject.Project, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0 5"/>
                                     <TextBlock DockPanel.Dock="Top" Text="Content-Type"/>
-                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ContentType}" Margin="0 5"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding SelectedProject.ContentType}" Margin="0 5"/>
                                     <Grid DockPanel.Dock="Top">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -78,13 +78,13 @@
                                         <Grid Column="0">
                                             <DockPanel>
                                                 <TextBlock DockPanel.Dock="Top" Text="Authorization-Scheme"/>
-                                                <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.AuthorizationScheme}" Margin="0 5 0 0"/>
+                                                <TextBox DockPanel.Dock="Top" Text="{Binding SelectedProject.AuthorizationScheme}" Margin="0 5 0 0"/>
                                             </DockPanel>
                                         </Grid>
                                         <Grid Column="2">
                                             <DockPanel>
                                                 <TextBlock DockPanel.Dock="Top" Text="Authorization-Parameter"/>
-                                                <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.AuthorizationParameter}" Margin="0 5 0 0"/>
+                                                <TextBox DockPanel.Dock="Top" Text="{Binding SelectedProject.AuthorizationParameter}" Margin="0 5 0 0"/>
                                             </DockPanel>
                                         </Grid>
                                     </Grid>
@@ -93,17 +93,17 @@
                             <Grid Column="1" Row="0">
                                 <DockPanel LastChildFill="False" Margin="10">
                                     <TextBlock DockPanel.Dock="Top" Text="Base URL 1"/>
-                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ProjectUrls[0]}" Margin="0 5"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding SelectedProject.ProjectUrls[0]}" Margin="0 5"/>
                                     <TextBlock DockPanel.Dock="Top" Text="Base URL 2"/>
-                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ProjectUrls[1]}" Margin="0 5"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding SelectedProject.ProjectUrls[1]}" Margin="0 5"/>
                                     <TextBlock DockPanel.Dock="Top" Text="Base URL 3"/>
-                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.ProjectUrls[2]}" Margin="0 5"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding SelectedProject.ProjectUrls[2]}" Margin="0 5"/>
                                 </DockPanel>
                             </Grid>
                             <Grid Column="2" Row="0">
                                 <DockPanel LastChildFill="True" Margin="10 10 10 15">
                                     <TextBlock DockPanel.Dock="Top" Text="Description"/>
-                                    <TextBox DockPanel.Dock="Top" Text="{Binding RESTCallProject.Description}" Margin="0 5 0 5" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"/>
+                                    <TextBox DockPanel.Dock="Top" Text="{Binding SelectedProject.Description}" Margin="0 5 0 5" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"/>
                                 </DockPanel>
                             </Grid>
                         </Grid>
@@ -136,7 +136,7 @@
                             <Button DockPanel.Dock="Right" Command="{Binding MoveRouteItemUpCommand}" Style="{StaticResource RoundedButtonStyle}" Content="{iconPacks:FontAwesome SortUpSolid, Height=13, Width=13}" Margin="3" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="1"  BorderBrush="{x:Null}" Foreground="{StaticResource ButtonForegroundColor}" Width="28"/>
                         </DockPanel>
                         <Rectangle DockPanel.Dock="Top" Height="2" Fill="{StaticResource HeaderLineColor}"/>
-                        <ListView ItemsSource="{Binding ProjectProject.Items}" SelectedItem="{Binding Route}" x:Name="RouteList" BorderBrush="White"  ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
+                        <ListView ItemsSource="{Binding SelectedProject.Items}" SelectedItem="{Binding SelectedRoute}" x:Name="RouteList" BorderBrush="White"  ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="3">
@@ -168,7 +168,7 @@
                             <TextBlock DockPanel.Dock="Left" Text="Name" Width="120" Margin="10 5"/>
                             <TextBlock DockPanel.Dock="Left" Text="Value" Margin="0 5"/>
                         </DockPanel>
-                        <ListView DockPanel.Dock="Top" ItemsSource="{Binding ProjectProject.Variables, Mode=TwoWay}" SelectedItem="{Binding SelectedApiVariable}" BorderBrush="White" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
+                        <ListView DockPanel.Dock="Top" ItemsSource="{Binding SelectedProject.Variables, Mode=TwoWay}" SelectedItem="{Binding SelectedApiVariable}" BorderBrush="White" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -203,7 +203,7 @@
                                 <Grid Column="0">
                                     <DockPanel>
                                         <TextBlock DockPanel.Dock="Top" Text="Http Method" Margin=" 0 0 0 5"/>
-                                        <ComboBox  ItemsSource="{Binding HttpVerbsEnumValues}" SelectedItem="{Binding Route.HttpVerb}"></ComboBox>
+                                        <ComboBox  ItemsSource="{Binding HttpVerbsEnumValues}" SelectedItem="{Binding SelectedRoute.HttpVerb}"></ComboBox>
                                     </DockPanel>
                                 </Grid>
                                 <Grid Column="1">
@@ -215,7 +215,7 @@
                                 <Grid Column="2">
                                     <DockPanel>
                                         <TextBlock DockPanel.Dock="Top" Text="Route" Margin=" 0 0 0 5"/>
-                                        <TextBox Text="{Binding Route.Route}"/>
+                                        <TextBox Text="{Binding SelectedRoute.Route}"/>
                                     </DockPanel>
                                 </Grid>
                             </Grid>
@@ -237,7 +237,7 @@
                                     <!--<TextBox Text="{Binding RESTCallItem.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"/>-->
                                     <avalonedit:TextEditor SyntaxHighlighting="JSON" x:Name="editorSendMessage">
                                         <i:Interaction.Behaviors>
-                                            <local:AvalonEditBehaviour GiveMeTheText="{Binding Route.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <local:AvalonEditBehaviour GiveMeTheText="{Binding SelectedRoute.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                         </i:Interaction.Behaviors>
                                     </avalonedit:TextEditor>
                                 </DockPanel>

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RestApiTestSolution.Annotations;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using RestApiTestSolution.Annotations;
 
 namespace RestApiTestSolution.Model
 {
@@ -18,7 +17,7 @@ namespace RestApiTestSolution.Model
             get => _httpVerb;
             set
             {
-                _httpVerb = value; 
+                _httpVerb = value;
                 OnPropertyChanged();
             }
         }
@@ -28,7 +27,7 @@ namespace RestApiTestSolution.Model
             get => _route ?? String.Empty;
             set
             {
-                _route = value; 
+                _route = value;
                 OnPropertyChanged();
             }
         }
@@ -38,7 +37,7 @@ namespace RestApiTestSolution.Model
             get => _body ?? String.Empty;
             set
             {
-                _body = value; 
+                _body = value;
                 OnPropertyChanged();
             }
         }
