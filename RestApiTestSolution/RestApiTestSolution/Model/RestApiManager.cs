@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -22,52 +24,55 @@ namespace RestApiTestSolution.Model
             return _repository.GetAllProjects(path);
         }
 
-        public void SaveProject(string path, RestApiCall restApiCall)
+        public void SaveProject(string path, ApiProject apiProject)
         {
-            _repository.WriteRestCallFile(path, restApiCall);
+            _repository.WriteRestCallFile(path, apiProject);
         }
 
-        public RestApiCall LoadProject(string path, string projectName)
+        public ApiProject LoadProject(string path, string projectName)
         {
             return _repository.ReadRestCallFile(path, projectName);
         }
 
-        public void RemoveProject(string path, RestApiCall restApiCall)
+        public void RemoveProject(string path, ApiProject apiProject)
         {
-            _repository.DeleteRestCallFile($"{path}\\{restApiCall.Project}.json");
+            _repository.DeleteRestCallFile($"{path}\\{apiProject.Project}.json");
         }
 
-        public async Task<HttpResponseMessage> SendHttpRequest(string accessToken, string baseUrl, RestApiCall restApiCallProject, RestApiCallItem restApiCallItem,
+        public async Task<HttpResponseMessage> SendHttpRequest(string accessToken, string baseUrl, ApiProject apiProjectProject, ApiRoute apiRoute,
             CancellationToken cancellationToken)
         {
             ServicePointManager.ServerCertificateValidationCallback = (message, cert, chain, errors) => true;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(baseUrl);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                if (!string.IsNullOrEmpty(restApiCallProject.AuthorizationScheme) &&
-                        !string.IsNullOrEmpty(restApiCallProject.AuthorizationParameter) &&
-                        !string.IsNullOrEmpty(accessToken))
+                if (!string.IsNullOrEmpty(apiProjectProject.AuthorizationScheme) &&
+                        !string.IsNullOrEmpty(apiProjectProject.AuthorizationParameter))
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(restApiCallProject.AuthorizationScheme, accessToken);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(apiProjectProject.AuthorizationScheme, apiProjectProject.GetStringReplacedWithVariable(apiProjectProject.AuthorizationParameter));
                 }
 
-                if (restApiCallItem.HttpVerb == "GET")
+                if (apiRoute.HttpVerb == "GET")
                 {
-                    HttpResponseMessage response = await client.GetAsync($"slmobileApi/{restApiCallItem.Route}");
+                    HttpResponseMessage response = await client.GetAsync($"{baseUrl}/{apiProjectProject.GetStringReplacedWithVariable(apiRoute.Route)}");
                     if (response.IsSuccessStatusCode)
                     {
                         return response;
                     }
-                }else if (restApiCallItem.HttpVerb == "POST")
+                }else if (apiRoute.HttpVerb == "POST")
                 {
-                    HttpResponseMessage response = await client.PostAsync($"slmobileApi/{restApiCallItem.Route}", CreateHttpContent(restApiCallItem.Body));
+                    HttpResponseMessage response = await client.PostAsync($"{baseUrl}/{apiProjectProject.GetStringReplacedWithVariable(apiRoute.Route)}", CreateHttpContent(apiRoute.Body));
                     return response;
-                }else if (restApiCallItem.HttpVerb == "PUT")
+                }else if (apiRoute.HttpVerb == "PUT")
                 {
-                    HttpResponseMessage response = await client.PutAsync($"slmobileApi/{restApiCallItem.Route}", CreateHttpContent(restApiCallItem.Body));
+                    HttpResponseMessage response = await client.PutAsync($"{baseUrl}/{apiProjectProject.GetStringReplacedWithVariable(apiRoute.Route)}", CreateHttpContent(apiRoute.Body));
+                    return response;
+                }
+                else if (apiRoute.HttpVerb == "DELETE")
+                {
+                    HttpResponseMessage response = await client.DeleteAsync($"{baseUrl}/{apiProjectProject.GetStringReplacedWithVariable(apiRoute.Route)}");
                     return response;
                 }
             }

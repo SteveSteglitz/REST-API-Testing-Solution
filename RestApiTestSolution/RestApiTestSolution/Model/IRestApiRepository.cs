@@ -10,9 +10,9 @@ namespace RestApiTestSolution.Model
     {
         IList<String> GetAllProjects(string path);
 
-        RestApiCall ReadRestCallFile(string path, string projectName);
+        ApiProject ReadRestCallFile(string path, string projectName);
 
-        void WriteRestCallFile(string path, RestApiCall restCall);
+        void WriteRestCallFile(string path, ApiProject project);
 
         void DeleteRestCallFile(string path);
     }

@@ -12,12 +12,12 @@ namespace RestApiTestSolution.Model
     {
         IList<String> GetAllProjects(string path);
 
-        void SaveProject(string path, RestApiCall restCall);
+        void SaveProject(string path, ApiProject project);
 
-        RestApiCall LoadProject(string path, string projectName);
+        ApiProject LoadProject(string path, string projectName);
 
-        void RemoveProject(string path, RestApiCall restApiCall);
+        void RemoveProject(string path, ApiProject apiProject);
 
-        Task<HttpResponseMessage> SendHttpRequest(string accessToken, string baseUrl, RestApiCall restApiCallProject, RestApiCallItem restApiCallItem, CancellationToken cancellationToken);
+        Task<HttpResponseMessage> SendHttpRequest(string accessToken, string baseUrl, ApiProject apiProjectProject, ApiRoute apiRoute, CancellationToken cancellationToken);
     }
 }

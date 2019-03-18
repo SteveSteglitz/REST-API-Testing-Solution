@@ -6,7 +6,7 @@ using RestApiTestSolution.Annotations;
 
 namespace RestApiTestSolution.Model
 {
-    public class RestApiCallItem : INotifyPropertyChanged
+    public class ApiRoute : INotifyPropertyChanged
     {
         private string _body;
         private string _route;

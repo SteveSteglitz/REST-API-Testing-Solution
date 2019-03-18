@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace RestApiTestSolution.View
+namespace RestApiTestSolution.View.Converter
 {
     public class BooleanToVisibilityConverter : IValueConverter
     {
@@ -29,7 +29,7 @@ namespace RestApiTestSolution.View
                 }
                 return (bValue) ? Visibility.Visible : Visibility.Collapsed;
             }
-            catch (InvalidCastException e)
+            catch (InvalidCastException)
             {
                 return Visibility.Collapsed;
             }
