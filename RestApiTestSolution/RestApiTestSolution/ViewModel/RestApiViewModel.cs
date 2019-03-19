@@ -15,8 +15,8 @@ namespace RestApiTestSolution.ViewModel
     {
         private readonly IRestApiManager _manager;
         private bool _projectsIsVisible;
-        private ApiRoute _route;
-        private ApiProject _projectProject;
+        private ApiRoute _selectedRoute;
+        private ApiProject _selectedProject;
         private string _receiveMessage;
         private string _selectedProjectUrl;
         private string _selectedProjectName;
@@ -34,12 +34,12 @@ namespace RestApiTestSolution.ViewModel
             ShowProjectsCommand = new RelayCommand(o => { ProjectsIsVisible = ProjectsIsVisible != true; });
             SendMessageCommand = new RelayCommand(SendMessage, o => true);
             CreateRouteCommand = new RelayCommand(CreateRouteCommandExecute, o => true);
-            DeleteRouteCommand = new RelayCommand(DeleteRouteCommandExecute, o => _route != null);
+            DeleteRouteCommand = new RelayCommand(DeleteRouteCommandExecute, o => SelectedRoute != null);
             NewProjectCommand = new RelayCommand(NewProjectCommandExecute, o => true);
-            SaveProjectCommand = new RelayCommand(SaveProjectCommandExecute, o => Route != null || ProjectProject != null);
-            DeleteProjectCommand = new RelayCommand(DeleteProjectCommandExecute, o => ProjectProject != null);
-            MoveRouteItemDownCommand = new RelayCommand(MoveRouteItemDownCommandExecute, o => Route != null);
-            MoveRouteItemUpCommand = new RelayCommand(MoveRouteItemUpCommandExecute, o => Route != null);
+            SaveProjectCommand = new RelayCommand(SaveProjectCommandExecute, o => SelectedRoute != null || SelectedProject != null);
+            DeleteProjectCommand = new RelayCommand(DeleteProjectCommandExecute, o => SelectedProject != null);
+            MoveRouteItemDownCommand = new RelayCommand(MoveRouteItemDownCommandExecute, o => SelectedRoute != null);
+            MoveRouteItemUpCommand = new RelayCommand(MoveRouteItemUpCommandExecute, o => SelectedRoute != null);
             CreateVariableCommand = new RelayCommand(CreateVariableCommandExecute);
             DeleteVariableCommand = new RelayCommand(DeleteVariableCommandExecute);
             AllProjectNames = new ObservableCollection<string>();
@@ -111,22 +111,22 @@ namespace RestApiTestSolution.ViewModel
             }
         }
 
-        public ApiProject ProjectProject
+        public ApiProject SelectedProject
         {
-            get => _projectProject;
+            get => _selectedProject;
             set
             {
-                _projectProject = value;
+                _selectedProject = value;
                 OnPropertyChanged();
             }
         }
 
-        public ApiRoute Route
+        public ApiRoute SelectedRoute
         {
-            get => _route;
+            get => _selectedRoute;
             set
             {
-                _route = value;
+                _selectedRoute = value;
                 OnPropertyChanged();
             }
         }
@@ -215,20 +215,20 @@ namespace RestApiTestSolution.ViewModel
         #region CommandExecutes
         private void DeleteRouteCommandExecute(object obj)
         {
-            ProjectProject.Items.Remove(Route);
+            SelectedProject.Items.Remove(SelectedRoute);
             SaveProject();
-            Route = ProjectProject.Items.FirstOrDefault();
+            SelectedRoute = SelectedProject.Items.FirstOrDefault();
         }
 
         private void CreateRouteCommandExecute(object obj)
         {
-            Route = new ApiRoute();
-            ProjectProject.Items.Add(Route);
+            SelectedRoute = new ApiRoute();
+            SelectedProject.Items.Add(SelectedRoute);
         }
 
         private void NewProjectCommandExecute(object obj)
         {
-            ProjectProject = new ApiProject
+            SelectedProject = new ApiProject
             {
                 ProjectUrls = new ObservableCollection<string> { "https://", "https://", "https://" }
             };
@@ -236,50 +236,50 @@ namespace RestApiTestSolution.ViewModel
 
         private void SaveProjectCommandExecute(object obj)
         {
-            if (Route != null)
+            if (SelectedRoute != null)
             {
-                var itemIdx = ProjectProject.Items.IndexOf(Route);
-                var item = ProjectProject.Items[itemIdx];
-                item.HttpVerb = Route.HttpVerb;
-                item.Route = Route.Route;
-                item.Body = Route.Body;
+                var itemIdx = SelectedProject.Items.IndexOf(SelectedRoute);
+                var item = SelectedProject.Items[itemIdx];
+                item.HttpVerb = SelectedRoute.HttpVerb;
+                item.Route = SelectedRoute.Route;
+                item.Body = SelectedRoute.Body;
             }
 
-            _manager.SaveProject(SubFolder, ProjectProject);
+            _manager.SaveProject(SubFolder, SelectedProject);
             GetAllProjectNames();
         }
 
         private void MoveRouteItemUpCommandExecute(object obj)
         {
-            var indexA = ProjectProject.Items.IndexOf(Route);
+            var indexA = SelectedProject.Items.IndexOf(SelectedRoute);
             if (indexA > 1)
             {
-                ProjectProject.Items.SwapItems(indexA - 1, indexA);
+                SelectedProject.Items.SwapItems(indexA - 1, indexA);
             }
 
-            Route = ProjectProject.Items[indexA - 1];
+            SelectedRoute = SelectedProject.Items[indexA - 1];
         }
 
         private void MoveRouteItemDownCommandExecute(object obj)
         {
-            var indexA = ProjectProject.Items.IndexOf(Route);
-            if (indexA < ProjectProject.Items.Count)
+            var indexA = SelectedProject.Items.IndexOf(SelectedRoute);
+            if (indexA < SelectedProject.Items.Count)
             {
-                ProjectProject.Items.SwapItems(indexA, indexA + 1);
+                SelectedProject.Items.SwapItems(indexA, indexA + 1);
             }
-            Route = ProjectProject.Items[indexA + 1];
+            SelectedRoute = SelectedProject.Items[indexA + 1];
         }
 
         private void CreateVariableCommandExecute(object obj)
         {
             SelectedApiVariable = new ApiVariable(String.Empty, String.Empty);
-            ProjectProject.Variables.Add(SelectedApiVariable);
+            SelectedProject.Variables.Add(SelectedApiVariable);
         }
 
         private void DeleteVariableCommandExecute(object obj)
         {
-            ProjectProject.Variables.Remove(SelectedApiVariable);
-            SelectedApiVariable = ProjectProject.Variables.FirstOrDefault();
+            SelectedProject.Variables.Remove(SelectedApiVariable);
+            SelectedApiVariable = SelectedProject.Variables.FirstOrDefault();
         } 
         #endregion
 
@@ -294,13 +294,13 @@ namespace RestApiTestSolution.ViewModel
 
         private void LoadProject(string projectName)
         {
-            ProjectProject = _manager.LoadProject(SubFolder, projectName);
-            Route = ProjectProject.Items.FirstOrDefault();
+            SelectedProject = _manager.LoadProject(SubFolder, projectName);
+            SelectedRoute = SelectedProject.Items.FirstOrDefault();
 
-            if (ProjectProject.ProjectUrls == null) return;
+            if (SelectedProject.ProjectUrls == null) return;
 
             ProjectUrls.Clear();
-            foreach (var url in ProjectProject.ProjectUrls)
+            foreach (var url in SelectedProject.ProjectUrls)
             {
                 ProjectUrls.Add(url);
             }
@@ -310,13 +310,13 @@ namespace RestApiTestSolution.ViewModel
 
         private void SaveProject()
         {
-            _manager.SaveProject(SubFolder, ProjectProject);
+            _manager.SaveProject(SubFolder, SelectedProject);
             GetAllProjectNames();
         }
 
         private void DeleteProjectCommandExecute(object obj)
         {
-            _manager.RemoveProject(SubFolder, ProjectProject);
+            _manager.RemoveProject(SubFolder, SelectedProject);
             GetAllProjectNames();
         }
 
@@ -325,11 +325,10 @@ namespace RestApiTestSolution.ViewModel
             try
             {
                 IsBusy = true;
-                var responseMessage = await _manager.SendHttpRequest(AccessToken, SelectedProjectUrl, ProjectProject,
-                    Route, CancellationToken.None);
+                var responseMessage = await _manager.SendHttpRequest(AccessToken, SelectedProjectUrl, SelectedProject, SelectedRoute, CancellationToken.None);
                 ReceiveMessage = responseMessage.Content?.ReadAsStringAsync().Result;
                 ReceiveMessageStatusCode = $"{responseMessage.StatusCode.ToString()} ({(int)Enum.Parse(typeof(HttpStatusCode), responseMessage.StatusCode.ToString())})";
-                ProjectProject.SaveVariableValueWhenFoundVariableName(ReceiveMessage);
+                SelectedProject.SaveVariableValueWhenFoundVariableName(ReceiveMessage);
             }
             catch (System.Net.Http.HttpRequestException exception)
             {
