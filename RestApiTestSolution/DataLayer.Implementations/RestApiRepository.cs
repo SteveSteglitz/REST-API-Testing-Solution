@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-
-namespace RestApiTestSolution.Model
+﻿namespace DataLayer.Implementations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using DataLayer.Interfaces;
+    using DataLayer.Models;
+    using Newtonsoft.Json;
+
     public class RestApiRepository : IRestApiRepository
     {
         public IList<String> GetAllProjects(string path)
@@ -20,17 +20,17 @@ namespace RestApiTestSolution.Model
             return files.Select(Path.GetFileNameWithoutExtension).ToList();
         }
 
-        public ApiProject ReadRestCallFile(string path, string projectName)
+        public ProjectDataModel ReadRestCallFile(string path, string projectName)
         {
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
             var jsonData = System.IO.File.ReadAllText($"{path}\\{projectName}.json");
-            return JsonConvert.DeserializeObject<ApiProject>(jsonData);
+            return JsonConvert.DeserializeObject<ProjectDataModel>(jsonData);
         }
 
-        public void WriteRestCallFile(string path, ApiProject project)
+        public void WriteRestCallFile(string path, ProjectDataModel project)
         {
             if (!Directory.Exists(path))
             {

@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using BusinessLayer.Implementations;
+using DataLayer.Implementations;
 using MahApps.Metro.Controls;
 using RestApiTestSolution.Model;
 using RestApiTestSolution.ViewModel;
@@ -22,12 +24,12 @@ namespace RestApiTestSolution.View
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private RestApiViewModel _viewModel;
+        private BasicModusViewModel _viewModel;
 
         public MainWindow()
         {
             InitializeComponent();
-            _viewModel = new RestApiViewModel(new RestApiManager(new RestApiRepository()));
+            _viewModel = new BasicModusViewModel(new RestApiManager(new RestApiRepository()));
             this.DataContext = _viewModel;
         }
     }
