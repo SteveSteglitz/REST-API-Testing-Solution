@@ -6,7 +6,6 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Windows.Input;
-using Newtonsoft.Json.Linq;
 using RestApiTestSolution.Model;
 
 namespace RestApiTestSolution.ViewModel
@@ -223,6 +222,10 @@ namespace RestApiTestSolution.ViewModel
         private void CreateRouteCommandExecute(object obj)
         {
             SelectedRoute = new ApiRoute();
+            if (SelectedProject.Items == null)
+            {
+                SelectedProject.Items = new ObservableCollection<ApiRoute>();
+            }
             SelectedProject.Items.Add(SelectedRoute);
         }
 
@@ -325,9 +328,11 @@ namespace RestApiTestSolution.ViewModel
             try
             {
                 IsBusy = true;
-                var responseMessage = await _manager.SendHttpRequest(AccessToken, SelectedProjectUrl, SelectedProject, SelectedRoute, CancellationToken.None);
+                var responseMessage = await _manager.SendHttpRequest(AccessToken, SelectedProjectUrl, SelectedProject,
+                    SelectedRoute, CancellationToken.None);
                 ReceiveMessage = responseMessage.Content?.ReadAsStringAsync().Result;
-                ReceiveMessageStatusCode = $"{responseMessage.StatusCode.ToString()} ({(int)Enum.Parse(typeof(HttpStatusCode), responseMessage.StatusCode.ToString())})";
+                ReceiveMessageStatusCode =
+                    $"{responseMessage.StatusCode.ToString()} ({(int) Enum.Parse(typeof(HttpStatusCode), responseMessage.StatusCode.ToString())})";
                 SelectedProject.SaveVariableValueWhenFoundVariableName(ReceiveMessage);
             }
             catch (System.Net.Http.HttpRequestException exception)
@@ -343,6 +348,10 @@ namespace RestApiTestSolution.ViewModel
                 }
 
                 ReceiveMessage = sb.ToString();
+            }
+            catch (Exception exception)
+            {
+                ReceiveMessage = exception.Message;
             }
             finally
             {
