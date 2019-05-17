@@ -1,45 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using BusinessLayer.Interfaces;
+using BusinessLayer.Models;
+using DataLayer.Interfaces;
+using DataLayer.Models;
 
-namespace RestApiTestSolution.Model
+namespace BusinessLayer.Implementations
 {
     public class RestApiManager : IRestApiManager
     {
-        private IRestApiRepository _repository;
-
         public RestApiManager(IRestApiRepository repository)
         {
-            _repository = repository;
+            Repository = repository;
+            Mapper = InitMapper();
+        }
+
+        public IRestApiRepository Repository { get; }
+
+        public IMapper Mapper { get; }
+
+        private IMapper InitMapper()
+        {
+            var config = new MapperConfiguration(x =>
+            {
+                x.CreateMap<ProjectBusinessModel, ProjectDataModel>();
+                x.CreateMap<RouteBusinessModel, RouteDataModel>();
+                x.CreateMap<VariableBusinessModel, VariableDataModel>();
+            });
+
+            return config.CreateMapper();
         }
 
         public IList<string> GetAllProjects(string path)
         {
-            return _repository.GetAllProjects(path);
+            return Repository.GetAllProjects(path);
         }
 
-        public void SaveProject(string path, ApiProject apiProject)
+        public void SaveProject(string path, ProjectBusinessModel project)
         {
-            _repository.WriteRestCallFile(path, apiProject);
+            Repository.WriteRestCallFile(path, Mapper.Map<ProjectDataModel>(project));
         }
 
-        public ApiProject LoadProject(string path, string projectName)
+        public ProjectBusinessModel LoadProject(string path, string projectName)
         {
-            return _repository.ReadRestCallFile(path, projectName);
+            return Mapper.Map<ProjectBusinessModel>(Repository.ReadRestCallFile(path, projectName));
         }
 
-        public void RemoveProject(string path, ApiProject apiProject)
+        public void RemoveProject(string path, ProjectBusinessModel apiProject)
         {
-            _repository.DeleteRestCallFile($"{path}\\{apiProject.Project}.json");
+            Repository.DeleteRestCallFile($"{path}\\{apiProject.Project}.json");
         }
 
-        public async Task<HttpResponseMessage> SendHttpRequest(string accessToken, string baseUrl, ApiProject apiProjectProject, ApiRoute apiRoute,
+        public async Task<HttpResponseMessage> SendHttpRequest(string accessToken, string baseUrl, ProjectBusinessModel apiProjectProject, RouteBusinessModel apiRoute,
             CancellationToken cancellationToken)
         {
             ServicePointManager.ServerCertificateValidationCallback = (message, cert, chain, errors) => true;

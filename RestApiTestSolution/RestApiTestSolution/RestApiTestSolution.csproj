@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=8.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.8.0.0\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net462\ControlzEx.dll</HintPath>
     </Reference>
@@ -57,6 +60,9 @@
     <Reference Include="MahApps.Metro.IconPacks.Modern, Version=2.3.0.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.IconPacks.Modern.2.3.0\lib\net46\MahApps.Metro.IconPacks.Modern.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -68,6 +74,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net462\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -95,18 +104,14 @@
     </ApplicationDefinition>
     <Compile Include="Model\ApiVariable.cs" />
     <Compile Include="Model\HttpVerbs.cs" />
-    <Compile Include="Model\IRestApiManager.cs" />
-    <Compile Include="Model\IRestApiRepository.cs" />
     <Compile Include="Model\ApiProject.cs" />
     <Compile Include="Model\ApiRoute.cs" />
-    <Compile Include="Model\RestApiManager.cs" />
-    <Compile Include="Model\RestApiRepository.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="View\Converter\HttpMethodColorConverter.cs" />
     <Compile Include="ViewModel\ObservableCollectionExtention.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
-    <Compile Include="ViewModel\RestApiViewModel.cs" />
+    <Compile Include="ViewModel\BasicModusViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -164,6 +169,28 @@
   </ItemGroup>
   <ItemGroup>
     <SplashScreen Include="splash.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLayer.Models\BusinessLayer.Models.csproj">
+      <Project>{A192664D-8A60-4172-B9B0-FE48316EF650}</Project>
+      <Name>BusinessLayer.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BusinessLayer\BusinessLayer.Interfaces.csproj">
+      <Project>{7F0FE0EF-5EFB-4D74-89A2-0E7C72AA898B}</Project>
+      <Name>BusinessLayer.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataLayer.Implementations\DataLayer.Implementations.csproj">
+      <Project>{C5C3C7A9-FE82-4FB4-8118-6607A604D1E2}</Project>
+      <Name>DataLayer.Implementations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataLayer.Interfaces\DataLayer.Interfaces.csproj">
+      <Project>{42B0BF14-F067-48D6-8B36-9C621F3672A7}</Project>
+      <Name>DataLayer.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Repository\BusinessLayer.Implementations.csproj">
+      <Project>{FA879AF9-31AD-44A2-BD5D-A9D6DFD9900D}</Project>
+      <Name>BusinessLayer.Implementations</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

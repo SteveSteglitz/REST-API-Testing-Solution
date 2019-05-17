@@ -10,7 +10,7 @@ using RestApiTestSolution.Model;
 
 namespace RestApiTestSolution.ViewModel
 {
-    public class RestApiViewModel : BaseViewModel
+    public class BasicModusViewModel : BaseViewModel
     {
         private readonly IRestApiManager _manager;
         private bool _projectsIsVisible;
@@ -23,13 +23,15 @@ namespace RestApiTestSolution.ViewModel
         private string _receiveMessageStatusCode;
         private ApiVariable _selectedApiVariable;
 
-        public RestApiViewModel()
+        public BasicModusViewModel()
         {
         }
 
-        public RestApiViewModel(IRestApiManager manager)
+        public BasicModusViewModel(IRestApiManager manager)
         {
             _manager = manager;
+            Mapper = InitMapper();
+
             ShowProjectsCommand = new RelayCommand(o => { ProjectsIsVisible = ProjectsIsVisible != true; });
             SendMessageCommand = new RelayCommand(SendMessage, o => true);
             CreateRouteCommand = new RelayCommand(CreateRouteCommandExecute, o => true);
@@ -78,6 +80,9 @@ namespace RestApiTestSolution.ViewModel
         #endregion
 
         #region Properties
+
+        public IMapper Mapper { get; }
+
         public IEnumerable<string> HttpVerbsEnumValues => new List<string> { "GET", "POST", "PUT", "DELETE" };
 
         public ObservableCollection<string> AllProjectNames { get; set; }
@@ -135,7 +140,7 @@ namespace RestApiTestSolution.ViewModel
             get => _selectedApiVariable;
             set
             {
-                _selectedApiVariable = value; 
+                _selectedApiVariable = value;
                 OnPropertyChanged();
             }
         }
@@ -159,7 +164,7 @@ namespace RestApiTestSolution.ViewModel
             get => _receiveMessageStatusCode;
             set
             {
-                _receiveMessageStatusCode = value; 
+                _receiveMessageStatusCode = value;
                 OnPropertyChanged();
             }
         }
@@ -191,7 +196,7 @@ namespace RestApiTestSolution.ViewModel
             get => _isBusy;
             set
             {
-                _isBusy = value; 
+                _isBusy = value;
                 OnPropertyChanged();
             }
         }
@@ -248,7 +253,7 @@ namespace RestApiTestSolution.ViewModel
                 item.Body = SelectedRoute.Body;
             }
 
-            _manager.SaveProject(SubFolder, SelectedProject);
+            _manager.SaveProject(SubFolder, Mapper.Map<ProjectBusinessModel>(SelectedProject));
             GetAllProjectNames();
         }
 
@@ -283,8 +288,20 @@ namespace RestApiTestSolution.ViewModel
         {
             SelectedProject.Variables.Remove(SelectedApiVariable);
             SelectedApiVariable = SelectedProject.Variables.FirstOrDefault();
-        } 
+        }
         #endregion
+
+        private IMapper InitMapper()
+        {
+            var config = new MapperConfiguration(x =>
+            {
+                x.CreateMap<ApiProject, ProjectBusinessModel>();
+                x.CreateMap<ApiRoute, RouteBusinessModel>();
+                x.CreateMap<ApiVariable, VariableBusinessModel>();
+            });
+
+            return config.CreateMapper();
+        }
 
         private void GetAllProjectNames()
         {
@@ -297,7 +314,7 @@ namespace RestApiTestSolution.ViewModel
 
         private void LoadProject(string projectName)
         {
-            SelectedProject = _manager.LoadProject(SubFolder, projectName);
+            SelectedProject = Mapper.Map<ApiProject>(_manager.LoadProject(SubFolder, projectName));
             SelectedRoute = SelectedProject.Items.FirstOrDefault();
 
             if (SelectedProject.ProjectUrls == null) return;
@@ -313,13 +330,13 @@ namespace RestApiTestSolution.ViewModel
 
         private void SaveProject()
         {
-            _manager.SaveProject(SubFolder, SelectedProject);
+            _manager.SaveProject(SubFolder, Mapper.Map<ProjectBusinessModel>(SelectedProject));
             GetAllProjectNames();
         }
 
         private void DeleteProjectCommandExecute(object obj)
         {
-            _manager.RemoveProject(SubFolder, SelectedProject);
+            _manager.RemoveProject(SubFolder, Mapper.Map<ProjectBusinessModel>(SelectedProject));
             GetAllProjectNames();
         }
 
@@ -328,8 +345,7 @@ namespace RestApiTestSolution.ViewModel
             try
             {
                 IsBusy = true;
-                var responseMessage = await _manager.SendHttpRequest(AccessToken, SelectedProjectUrl, SelectedProject,
-                    SelectedRoute, CancellationToken.None);
+                var responseMessage = await _manager.SendHttpRequest(AccessToken, SelectedProjectUrl, Mapper.Map<ProjectBusinessModel>(SelectedProject), Mapper.Map<RouteBusinessModel>(SelectedRoute), CancellationToken.None);
                 ReceiveMessage = responseMessage.Content?.ReadAsStringAsync().Result;
                 ReceiveMessageStatusCode =
                     $"{responseMessage.StatusCode.ToString()} ({(int) Enum.Parse(typeof(HttpStatusCode), responseMessage.StatusCode.ToString())})";
@@ -359,6 +375,6 @@ namespace RestApiTestSolution.ViewModel
             }
 
         }
-       
+
     }
 }
